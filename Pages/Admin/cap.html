@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Historial de Intentos Sospechosos</title>
+  
+  <style>
+    /* Fondo con animación degradada */
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(-45deg, #1abc9c, #16a085, #2c3e50, #34495e);
+      background-size: 400% 400%;
+      animation: moverFondo 15s ease infinite;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    @keyframes moverFondo {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Card principal */
+    .inventory-panel {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2rem;
+      max-width: 900px;
+      width: 100%;
+      color: #ffffff;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1.5s ease;
+      overflow-x: auto;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+
+    /* Botón Volver al Panel */
+    .btn-back {
+      margin-bottom: 20px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 15px rgba(26, 188, 156, 0.3);
+      transition: all 0.3s ease;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .btn-back:hover {
+      background: linear-gradient(135deg, #16a085, #1abc9c);
+      transform: scale(1.05);
+    }
+
+    /* Tabla estilizada */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: white;
+      font-size: 0.95rem;
+    }
+
+    thead {
+      background: rgba(26, 188, 156, 0.8);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      vertical-align: middle;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    img {
+      max-width: 140px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      transition: transform 0.3s ease;
+      cursor: zoom-in;
+    }
+
+    img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Botón borrar */
+    .btn-danger {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border: none;
+      padding: 14px 25px;
+      border-radius: 15px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-top: 25px;
+      align-self: center;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 6px 18px rgba(231, 76, 60, 0.4);
+      user-select: none;
+    }
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #c0392b, #e74c3c);
+      transform: scale(1.05);
+    }
+
+    /* Responsive para móviles */
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.8rem;
+      }
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+      thead tr {
+        display: none;
+      }
+      tr {
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 15px;
+      }
+      td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+      }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: bold;
+        text-align: left;
+        color: #1abc9c;
+      }
+      img {
+        max-width: 100%;
+        margin: 0 auto;
+        display: block;
+      }
+      .btn-danger, .btn-back {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="inventory-panel">
+
+    <button class="btn-back" onclick="window.location.href='admin.html'">
+      ← Volver al Panel
+    </button>
+
+    <h2>📸 Historial de Intentos Sospechosos</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Correo Intentado</th>
+          <th>Imagen Capturada</th>
+          <th>Descargar</th>
+        </tr>
+      </thead>
+      <tbody id="tablaIntrusos"></tbody>
+    </table>
+
+    <button class="btn-danger" onclick="borrarHistorial()">🗑 Borrar historial</button>
+  </div>
+
+  <script>
+    const registros = JSON.parse(localStorage.getItem("auditoriaIntrusos")) || [];
+    const tbody = document.getElementById("tablaIntrusos");
+
+    registros.forEach((registro, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td data-label="Fecha">${registro.fecha}</td>
+        <td data-label="Correo Intentado">${registro.correoIntentado}</td>
+        <td data-label="Imagen Capturada"><img src="${registro.imagen}" alt="Captura" /></td>
+        <td data-label="Descargar">
+          <a href="${registro.imagen}" download="intruso_${index + 1}.png" style="color:#1abc9c; font-weight:bold; text-decoration:none;">
+            Descargar
+          </a>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    function borrarHistorial() {
+      if(confirm("¿Seguro que deseas borrar todo el historial de intrusos?")) {
+        localStorage.removeItem("auditoriaIntrusos");
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

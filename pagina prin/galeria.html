@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../Assests/Img/favicon.png" type="image/png" />
+  <title>Galería CBC</title>
+  <style>
+    :root {
+      --primary: #009688;
+      --bg: #f5f7fa;
+      --text: #333;
+      --shadow: rgba(0, 0, 0, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(90deg, #004080, #007bff);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    header a {
+      background-color: #ffc107;
+      color: #000;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 5px;
+    }
+
+    header a:hover {
+      background-color: #e0a800;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .card-info {
+      padding: 1rem;
+    }
+
+    .card-info h3 {
+      font-size: 1.2rem;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-info p {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      flex-direction: column;
+    }
+
+    .lightbox.show {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 80vh;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox .controls {
+      margin-top: 1rem;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .lightbox button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .lightbox button:hover {
+      background: #00796b;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    footer {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Galería de Productos CBC</h1>
+  <a href="../index.html">Volver al Inicio</a>
+</header>
+
+<div class="container">
+  <div class="gallery" id="gallery">
+    <!-- Cada imagen se mostrará y se usará para abrir el lightbox -->
+  </div>
+</div>
+
+<!-- Contenedor del lightbox con navegación cíclica -->
+<div class="lightbox" id="lightbox">
+  <button class="close-btn" onclick="closeLightbox()">&times;</button>
+  <img id="lightbox-img" src="" alt="Vista ampliada" />
+  <div class="controls">
+    <button onclick="prevImage()">⟵ Anterior</button>
+    <button onclick="nextImage()">Siguiente ⟶</button>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 CBC - DECORACIÓN. Visítanos para más productos.</p>
+</footer>
+
+<script>
+  const images = [
+    {
+      src: "../Assests/Img/gl1.png",
+      alt: "Accesorios de baño",
+      title: "Accesorios de Baño",
+      desc: "Incluye jabonera, toallero, portacepillos y más. Diseño moderno en acero inoxidable."
+    },
+    {
+      src: "../Assests/Img/gl2.png",
+      alt: "Juego de incrustaciones",
+      title: "Juego de Incrustaciones",
+      desc: "Perfecto para remodelar tu baño con estilo. Acabado cromado y resistente al agua."
+    },
+    {
+      src: "../Assests/Img/gl3.jpg",
+      alt: "Ducha Moderna",
+      title: "Ducha Moderna",
+      desc: "Chorro tipo lluvia y diseño elegante. Material resistente y fácil instalación."
+    },
+    {
+      src: "../Assests/Img/gl5.jpg",
+      alt: "Rejilla de piso",
+      title: "Rejilla de Piso",
+      desc: "Acero inoxidable, ideal para desagües. Diseño funcional y duradero."
+    },
+    {
+      src: "../Assests/Img/gl4.jpg",
+      alt: "Espejo con luz",
+      title: "Espejo con Luz LED",
+      desc: "Iluminación integrada, antiniebla. Perfecto para tu rutina diaria."
+    }
+  ];
+
+  const gallery = document.getElementById("gallery");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  let currentIndex = 0;
+
+  // Generar galería dinámicamente
+  images.forEach((img, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${img.src}" alt="${img.alt}" onclick="openLightbox(${index})" />
+      <div class="card-info">
+        <h3>${img.title}</h3>
+        <p>${img.desc}</p>
+      </div>
+    `;
+    gallery.appendChild(card);
+  });
+
+  function openLightbox(index) {
+    currentIndex = index;
+    lightboxImg.src = images[currentIndex].src;
+    lightboxImg.alt = images[currentIndex].alt;
+    lightbox.classList.add("show");
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("show");
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    lightboxImg.src = images[currentIndex].src;
+    lightboxImg.alt = images[currentIndex].alt;
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    lightboxImg.src = images[currentIndex].src;
+    lightboxImg.alt = images[currentIndex].alt;
+  }
+
+  // Cierra con ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowRight") nextImage();
+    if (e.key === "ArrowLeft") prevImage();
+  });
+</script>
+
+</body>
+</html>
