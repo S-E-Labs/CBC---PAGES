@@ -6,10 +6,10 @@
   <title>Administrador - CBC</title>
   <link rel="icon" href="../Assests/Img/favicon.png" type="image/png"/>
 
-  <!-- Bootstrap -->
+  <!-- Bootstrap y Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 
-  <!-- Estilos personalizados -->
   <style>
     body {
       margin: 0;
@@ -21,6 +21,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 2rem;
     }
 
     @keyframes moverFondo {
@@ -29,83 +30,122 @@
       100% { background-position: 0% 50%; }
     }
 
-    .admin-panel {
+    .dashboard {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      border-radius: 16px;
-      color: white;
+      border-radius: 20px;
       padding: 2rem;
-      text-align: center;
       width: 100%;
-      max-width: 500px;
-    }
-
-    h1 {
-      margin-bottom: 1.5rem;
-    }
-
-    .btn-custom {
-      background-color: #00bfa5;
-      border: none;
+      max-width: 900px;
       color: white;
-      padding: 0.75rem 1.5rem;
-      margin: 0.5rem 0;
-      transition: all 0.3s ease;
-      width: 100%;
     }
 
-    .btn-custom:hover {
-      background-color: #008e76;
-      transform: scale(1.05);
+    .dashboard h1 {
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
-    .btn-logout {
+    .card-option {
+      background-color: rgba(255, 255, 255, 0.15);
+      border: none;
+      backdrop-filter: blur(6px);
+      border-radius: 15px;
+      color: white;
+      text-align: center;
+      transition: transform 0.3s ease, background 0.3s ease;
+      cursor: pointer;
+      padding: 1.5rem;
+    }
+
+    .card-option:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-5px);
+    }
+
+    .card-option i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .logout-btn {
+      margin-top: 2rem;
       background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: 0.3s ease;
     }
 
-    .btn-logout:hover {
+    .logout-btn:hover {
       background-color: #c0392b;
     }
   </style>
 </head>
 <body>
-  <div class="admin-panel">
-    <h1>Panel de Administración</h1>
+  <div class="dashboard">
+    <h1><i class="fas fa-user-shield me-2"></i>Panel del Administrador</h1>
 
-    <button class="btn btn-custom" onclick="window.location.href='./inventario/inventario.html'">Inventario</button>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="card-option" onclick="location.href='./inventario/inventario.html'">
+          <i class="fas fa-boxes"></i>
+          <p>Inventario</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-option" onclick="location.href='../Admin/proveedores.html'">
+          <i class="fas fa-truck"></i>
+          <p>Proveedores</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-option" onclick="location.href='../Admin/gestion_usuario.html'">
+          <i class="fas fa-users-cog"></i>
+          <p>Gestión de Usuarios</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-option" onclick="location.href='../Admin/publicaciones.html'">
+          <i class="fas fa-newspaper"></i>
+          <p>Publicaciones</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-option" onclick="location.href='../Admin/cap.html'">
+          <i class="fas fa-shield-alt"></i>
+          <p>Intentos Sospechosos</p>
+        </div>
+      </div>
+    </div>
 
-    <button class="btn btn-custom" onclick="window.location.href='../Admin/proveedores.html'">Proveedores</button>
-
-    <button class="btn btn-custom" onclick="window.location.href='../Admin/gestion_usuario.html'">Gestión de Usuarios</button>
-    
-    <button class="btn btn-custom" onclick="window.location.href='../Admin/cap.html'">Ver intentos sospechosos</button>
-
-
-
-    <hr style="border-color: rgba(255,255,255,0.2);"/>
-
-    <button class="btn btn-custom btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+    <div class="text-center">
+      <button class="logout-btn mt-4" onclick="cerrarSesion()">
+        <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+      </button>
+    </div>
   </div>
 
   <script>
-    // Verificar sesión al cargar la página
+    // Validación de sesión
     window.addEventListener('load', () => {
       const usuario = sessionStorage.getItem('usuario');
       const rol = sessionStorage.getItem('rol');
 
       if (!usuario || rol !== 'administrador') {
-        // Redirige al login si no está autenticado o no es admin
-        window.location.href = "../../Pages/index.html"; // Ajusta esta ruta según tu proyecto
+        window.location.href = "../../Pages/index.html";
       }
     });
 
-    // Función para cerrar sesión
     function cerrarSesion() {
       sessionStorage.clear();
-      window.location.href = "../../Pages/index.html"; // Ajusta esta ruta según tu proyecto
+      window.location.href = "../../Pages/index.html";
     }
   </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
