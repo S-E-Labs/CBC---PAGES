@@ -4,9 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Historial de Intentos Sospechosos</title>
-  
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    /* Fondo con animación degradada */
     body {
       margin: 0;
       height: 100vh;
@@ -17,7 +23,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 1rem;
+      padding: 2rem;
       box-sizing: border-box;
     }
 
@@ -27,21 +33,19 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Card principal */
     .inventory-panel {
       background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(14px);
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 2rem;
-      max-width: 900px;
+      max-width: 1000px;
       width: 100%;
-      color: #ffffff;
-      text-align: center;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      color: white;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
       animation: fadeIn 1.5s ease;
       overflow-x: auto;
-      max-height: 90vh;
+      max-height: 95vh;
       display: flex;
       flex-direction: column;
     }
@@ -52,26 +56,29 @@
     }
 
     h2 {
+      text-align: center;
+      font-weight: bold;
       font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      color: #ffffff;
+      margin-bottom: 2rem;
+      color: white;
     }
 
-    /* Botón Volver al Panel */
-    .btn-back {
+    .btn-back, .btn-danger {
       margin-bottom: 20px;
       width: 100%;
       padding: 12px;
-      background: linear-gradient(135deg, #1abc9c, #16a085);
-      color: white;
-      font-size: 1rem;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 8px 15px rgba(26, 188, 156, 0.3);
+      font-size: 1rem;
+      font-weight: bold;
       transition: all 0.3s ease;
-      text-align: center;
-      display: inline-block;
+    }
+
+    .btn-back {
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      color: white;
+      box-shadow: 0 8px 15px rgba(26, 188, 156, 0.3);
     }
 
     .btn-back:hover {
@@ -79,27 +86,34 @@
       transform: scale(1.05);
     }
 
-    /* Tabla estilizada */
+    .btn-danger {
+      background-color: #e74c3c;
+      color: white;
+      box-shadow: 0 6px 18px rgba(231, 76, 60, 0.4);
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+      transform: scale(1.05);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       color: white;
-      font-size: 0.95rem;
+      font-size: 1rem;
+      text-align: center;
     }
 
     thead {
       background: rgba(26, 188, 156, 0.8);
       font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
     }
 
     th, td {
       padding: 12px 15px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       vertical-align: middle;
-      text-align: center;
-      word-break: break-word;
     }
 
     img {
@@ -114,38 +128,13 @@
       transform: scale(1.1);
     }
 
-    /* Botón borrar */
-    .btn-danger {
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-      border: none;
-      padding: 14px 25px;
-      border-radius: 15px;
-      color: white;
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-top: 25px;
-      align-self: center;
-      transition: background 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 6px 18px rgba(231, 76, 60, 0.4);
-      user-select: none;
-    }
-    .btn-danger:hover {
-      background: linear-gradient(135deg, #c0392b, #e74c3c);
-      transform: scale(1.05);
-    }
-
-    /* Responsive para móviles */
-    @media (max-width: 600px) {
-      h2 {
-        font-size: 1.8rem;
-      }
+    @media (max-width: 768px) {
+      h2 { font-size: 1.8rem; }
       table, thead, tbody, th, td, tr {
         display: block;
         width: 100%;
       }
-      thead tr {
-        display: none;
-      }
+      thead tr { display: none; }
       tr {
         margin-bottom: 20px;
         background: rgba(255, 255, 255, 0.05);
@@ -167,25 +156,26 @@
         text-align: left;
         color: #1abc9c;
       }
-      img {
-        max-width: 100%;
-        margin: 0 auto;
-        display: block;
-      }
-      .btn-danger, .btn-back {
-        width: 100%;
-      }
+    }
+
+    #graficaIntentos, #graficaPastel {
+      margin-top: 30px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 15px;
     }
   </style>
 </head>
 <body>
   <div class="inventory-panel">
-
     <button class="btn-back" onclick="window.location.href='admin.html'">
-      ← Volver al Panel
+      <i class="fas fa-arrow-left me-2"></i> Volver al Panel
     </button>
 
-    <h2>📸 Historial de Intentos Sospechosos</h2>
+    <h2><i class="fas fa-shield-alt me-2"></i>Historial de Intentos Sospechosos</h2>
+
+    <canvas id="graficaIntentos"></canvas>
+    <canvas id="graficaPastel"></canvas>
 
     <table>
       <thead>
@@ -199,7 +189,9 @@
       <tbody id="tablaIntrusos"></tbody>
     </table>
 
-    <button class="btn-danger" onclick="borrarHistorial()">🗑 Borrar historial</button>
+    <button class="btn-danger" onclick="borrarHistorial()">
+      <i class="fas fa-trash-alt me-2"></i> Borrar historial
+    </button>
   </div>
 
   <script>
@@ -213,7 +205,7 @@
         <td data-label="Correo Intentado">${registro.correoIntentado}</td>
         <td data-label="Imagen Capturada"><img src="${registro.imagen}" alt="Captura" /></td>
         <td data-label="Descargar">
-          <a href="${registro.imagen}" download="intruso_${index + 1}.png" style="color:#1abc9c; font-weight:bold; text-decoration:none;">
+          <a href="${registro.imagen}" download="intruso_${index + 1}.png" style="color:#1abc9c; font-weight:bold;">
             Descargar
           </a>
         </td>
@@ -221,12 +213,100 @@
       tbody.appendChild(tr);
     });
 
+    function generarGraficaIntentos() {
+  const conteoPorFecha = {};
+
+  registros.forEach(reg => {
+    const fecha = reg.fecha.split(" ")[0];
+    conteoPorFecha[fecha] = (conteoPorFecha[fecha] || 0) + 1;
+  });
+
+  const labels = Object.keys(conteoPorFecha);
+  const datos = Object.values(conteoPorFecha);
+
+  const colores = labels.map(() => `hsl(${Math.random() * 360}, 80%, 60%)`);
+  const ctxBar = document.getElementById("graficaIntentos").getContext("2d");
+  const ctxPie = document.getElementById("graficaPastel").getContext("2d");
+
+  new Chart(ctxBar, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: "Intentos por Fecha",
+        data: datos,
+        fill: true,
+        tension: 0.4, // crea un efecto curvo suave como un gráfico sísmico
+        backgroundColor: "rgba(26, 188, 156, 0.2)",
+        borderColor: "#1abc9c",
+        pointBackgroundColor: "white",
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: "white" } },
+        tooltip: { mode: "index", intersect: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1, color: "white" },
+          grid: { color: "rgba(255,255,255,0.2)" }
+        },
+        x: {
+          ticks: { color: "white" },
+          grid: { color: "rgba(255,255,255,0.2)" }
+        }
+      },
+      animation: {
+        duration: 2000,
+        easing: "easeInOutQuart"
+      }
+    }
+  });
+
+  new Chart(ctxPie, {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [{
+        label: "Distribución de Intentos",
+        data: datos,
+        backgroundColor: colores,
+        borderColor: "#ecf0f1",
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: { color: "white", padding: 20, boxWidth: 20 }
+        },
+        tooltip: { mode: "index", intersect: false }
+      },
+      animation: {
+        duration: 1500,
+        easing: "easeOutBounce"
+      }
+    }
+  });
+}
+
+    generarGraficaIntentos();
+
     function borrarHistorial() {
-      if(confirm("¿Seguro que deseas borrar todo el historial de intrusos?")) {
+      if (confirm("¿Seguro que deseas borrar todo el historial de intrusos?")) {
         localStorage.removeItem("auditoriaIntrusos");
         location.reload();
       }
     }
   </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
