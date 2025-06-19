@@ -710,7 +710,7 @@
           <div class="stat-card inventario" onclick="mostrarSeccion('inventario-section')">
             <div class="stat-header">
               <div>
-                <div class="stat-number" id="inventoryCount">1,248</div>
+                <div class="stat-number" id="inventoryCount">0</div>
                 <div class="stat-title">Productos en Inventario</div>
               </div>
               <div class="stat-icon">
@@ -722,7 +722,7 @@
           <div class="stat-card proveedores" onclick="mostrarSeccion('proveedores-section')">
             <div class="stat-header">
               <div>
-                <div class="stat-number" id="supplierCount">24</div>
+                <div class="stat-number" id="supplierCount">0</div>
                 <div class="stat-title">Proveedores Activos</div>
               </div>
               <div class="stat-icon">
@@ -734,7 +734,7 @@
           <div class="stat-card usuarios" onclick="mostrarSeccion('usuarios-section')">
             <div class="stat-header">
               <div>
-                <div class="stat-number" id="userCount">15</div>
+                <div class="stat-number" id="userCount">0</div>
                 <div class="stat-title">Usuarios Registrados</div>
               </div>
               <div class="stat-icon">
@@ -746,7 +746,7 @@
           <div class="stat-card alertas" onclick="mostrarSeccion('sospechosos-section')">
             <div class="stat-header">
               <div>
-                <div class="stat-number" id="alertCount">3</div>
+                <div class="stat-number" id="alertCount">0</div>
                 <div class="stat-title">Alertas de Seguridad</div>
               </div>
               <div class="stat-icon">
@@ -761,8 +761,8 @@
             <div class="chart-header">
               <h3>Inventario por Categoría</h3>
               <div>
-                <button class="btn btn-sm btn-outline-secondary">Esta semana</button>
-                <button class="btn btn-sm btn-primary">Este mes</button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="actualizarDashboardCharts('week')">Esta semana</button>
+                <button class="btn btn-sm btn-primary" onclick="actualizarDashboardCharts('month')">Este mes</button>
               </div>
             </div>
             <div class="chart">
@@ -786,50 +786,8 @@
             <a href="#">Ver todo</a>
           </div>
           
-          <div class="activity-list">
-            <div class="activity-item">
-              <div class="activity-icon inventario">
-                <i class="fas fa-box"></i>
-              </div>
-              <div class="activity-content">
-                <div class="activity-title">Nuevo producto agregado</div>
-                <div class="activity-desc">Sofá de 3 plazas modelo Barcelona fue agregado al inventario</div>
-              </div>
-              <div class="activity-time">Hace 2 horas</div>
-            </div>
-            
-            <div class="activity-item">
-              <div class="activity-icon usuario">
-                <i class="fas fa-user-plus"></i>
-              </div>
-              <div class="activity-content">
-                <div class="activity-title">Nuevo usuario registrado</div>
-                <div class="activity-desc">Carlos Rodríguez fue registrado como empleado</div>
-              </div>
-              <div class="activity-time">Hace 5 horas</div>
-            </div>
-            
-            <div class="activity-item">
-              <div class="activity-icon proveedor">
-                <i class="fas fa-truck-loading"></i>
-              </div>
-              <div class="activity-content">
-                <div class="activity-title">Pedido a proveedor</div>
-                <div class="activity-desc">Se realizó pedido de 50 unidades a Muebles del Norte</div>
-              </div>
-              <div class="activity-time">Ayer, 15:30</div>
-            </div>
-            
-            <div class="activity-item">
-              <div class="activity-icon alerta">
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <div class="activity-content">
-                <div class="activity-title">Intento sospechoso detectado</div>
-                <div class="activity-desc">Se registró un intento de acceso no autorizado</div>
-              </div>
-              <div class="activity-time">Ayer, 10:15</div>
-            </div>
+          <div class="activity-list" id="activityList">
+            <!-- Actividades se cargan dinámicamente -->
           </div>
         </div>
       </div>
@@ -841,7 +799,7 @@
         <div class="row mb-4">
           <div class="col-md-6">
             <label for="categoria">Selecciona Categoría:</label>
-            <select class="form-select" id="categoria" onchange="mostrarProductos(); actualizarGraficas()">
+            <select class="form-select" id="categoria" onchange="mostrarProductos(); actualizarGraficas(); actualizarDashboardCharts()">
               <option value="">-- Todas las Categorías (para búsqueda global) --</option>
               <option value="lavamanos">Lavamanos</option>
               <option value="muebles">Muebles</option>
@@ -976,6 +934,14 @@
     const categorias = ["lavamanos", "muebles", "sanitarios", "grifos", "accesorios"];
     let chartCategorias, chartValorInventario, chartBajoStock, chartMargenBeneficio;
     let dashboardInventoryChart, dashboardActivityChart;
+    
+    // Datos de actividad
+    const actividades = [
+      { tipo: "inventario", titulo: "Nuevo producto agregado", desc: "Sofá de 3 plazas modelo Barcelona", tiempo: "Hace 2 horas" },
+      { tipo: "usuario", titulo: "Nuevo usuario registrado", desc: "Carlos Rodríguez fue registrado como empleado", tiempo: "Hace 5 horas" },
+      { tipo: "proveedor", titulo: "Pedido a proveedor", desc: "Se realizó pedido de 50 unidades a Muebles del Norte", tiempo: "Ayer, 15:30" },
+      { tipo: "alerta", titulo: "Intento sospechoso detectado", desc: "Se registró un intento de acceso no autorizado", tiempo: "Ayer, 10:15" }
+    ];
 
     // Validación de sesión
     window.addEventListener('load', () => {
@@ -996,6 +962,8 @@
       initInventario();
       // Inicializar gráficos del dashboard
       initCharts();
+      // Cargar actividades
+      cargarActividades();
     });
 
     function cerrarSesion() {
@@ -1006,6 +974,28 @@
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('active');
+    }
+    
+    // Cargar actividades recientes
+    function cargarActividades() {
+      const container = document.getElementById('activityList');
+      container.innerHTML = '';
+      
+      actividades.forEach(actividad => {
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+        item.innerHTML = `
+          <div class="activity-icon ${actividad.tipo}">
+            <i class="fas fa-${actividad.tipo === 'inventario' ? 'box' : actividad.tipo === 'usuario' ? 'user-plus' : actividad.tipo === 'proveedor' ? 'truck-loading' : 'shield-alt'}"></i>
+          </div>
+          <div class="activity-content">
+            <div class="activity-title">${actividad.titulo}</div>
+            <div class="activity-desc">${actividad.desc}</div>
+          </div>
+          <div class="activity-time">${actividad.tiempo}</div>
+        `;
+        container.appendChild(item);
+      });
     }
     
     // Navegación entre secciones
@@ -1049,6 +1039,7 @@
       mostrarProductos();
       actualizarGraficas();
       actualizarContadores();
+      actualizarDashboardCharts();
     }
     
     // Actualizar contadores del dashboard
@@ -1062,6 +1053,9 @@
       document.getElementById('inventoryCount').textContent = totalProductos.toLocaleString();
       
       // Actualizar otros contadores según sea necesario
+      document.getElementById('supplierCount').textContent = '24';
+      document.getElementById('userCount').textContent = '15';
+      document.getElementById('alertCount').textContent = '3';
     }
 
     function obtenerCategoria() {
@@ -1125,6 +1119,16 @@
       }
       filtrarProductos();
       actualizarGraficas();
+      actualizarDashboardCharts();
+      
+      // Agregar actividad
+      actividades.unshift({
+        tipo: "inventario",
+        titulo: "Producto eliminado",
+        desc: `Producto con código ${codigo} fue eliminado del inventario`,
+        tiempo: "Hace unos momentos"
+      });
+      cargarActividades();
     }
 
     function agregarProducto() {
@@ -1162,6 +1166,16 @@
        
       mostrarProductos();
       actualizarGraficas();
+      actualizarDashboardCharts();
+      
+      // Agregar actividad
+      actividades.unshift({
+        tipo: "inventario",
+        titulo: "Nuevo producto agregado",
+        desc: `${nombre} (${codigo}) fue agregado al inventario`,
+        tiempo: "Hace unos momentos"
+      });
+      cargarActividades();
     }
 
     function filtrarProductos() {
@@ -1217,6 +1231,15 @@
       } else if (tipo === "excel") {
         exportarExcel(productosAExportar);
       }
+      
+      // Agregar actividad
+      actividades.unshift({
+        tipo: "inventario",
+        titulo: "Exportación de datos",
+        desc: `Se exportó ${todo ? 'todo el inventario' : 'la categoría actual'} en formato ${tipo.toUpperCase()}`,
+        tiempo: "Hace unos momentos"
+      });
+      cargarActividades();
     }
 
     function exportarPDF(productos) {
@@ -1308,9 +1331,19 @@
           alert("Se importaron algunos productos, pero hubo errores:\n" + errores.join("\n"));
         } else {
           alert("Productos importados con éxito.");
+          
+          // Agregar actividad
+          actividades.unshift({
+            tipo: "inventario",
+            titulo: "Importación desde Excel",
+            desc: "Se importaron productos desde un archivo Excel",
+            tiempo: "Hace unos momentos"
+          });
+          cargarActividades();
         }
         mostrarProductos();
         actualizarGraficas();
+        actualizarDashboardCharts();
         archivoInput.value = ""; // Reset file input
       };
 
@@ -1478,6 +1511,29 @@
       });
     }
     
+    // Actualizar gráficos del dashboard
+    function actualizarDashboardCharts(range = 'month') {
+      // Datos reales del inventario
+      const datosCategorias = categorias.map(cat => {
+        const productos = JSON.parse(localStorage.getItem(cat)) || [];
+        return productos.length;
+      });
+      
+      // Actualizar gráfico de inventario en dashboard
+      if (dashboardInventoryChart) {
+        dashboardInventoryChart.data.datasets[0].data = datosCategorias;
+        dashboardInventoryChart.update();
+      }
+      
+      // Actualizar gráfico de actividad (simulado)
+      const activityData = range === 'week' ? [25, 30, 40, 35, 45, 50, 40] : [150, 180, 200, 190, 210, 230, 220];
+      
+      if (dashboardActivityChart) {
+        dashboardActivityChart.data.datasets[0].data = activityData;
+        dashboardActivityChart.update();
+      }
+    }
+    
     // Gráficos del dashboard
     function initCharts() {
       // Gráfico de inventario
@@ -1485,9 +1541,9 @@
       dashboardInventoryChart = new Chart(inventoryCtx, {
         type: 'doughnut',
         data: {
-          labels: ['Sofás', 'Mesas', 'Sillas', 'Armarios', 'Decoración'],
+          labels: categorias,
           datasets: [{
-            data: [25, 18, 15, 22, 20],
+            data: categorias.map(cat => JSON.parse(localStorage.getItem(cat))?.length || 0),
             backgroundColor: [
               '#4361ee',
               '#4cc9f0',
@@ -1504,6 +1560,13 @@
           plugins: {
             legend: {
               position: 'bottom'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw} productos`;
+                }
+              }
             }
           }
         }
