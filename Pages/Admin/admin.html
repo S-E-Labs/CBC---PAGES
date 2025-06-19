@@ -3,149 +3,1539 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Administrador - CBC</title>
-  <link rel="icon" href="../Assests/Img/favicon.png" type="image/png"/>
+  <title>Dashboard Administrativo - CBC</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>" type="image/svg+xml"/>
 
   <!-- Bootstrap y Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  
+  <!-- Bibliotecas para exportación -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
   <style>
-    body {
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3f37c9;
+      --accent: #4cc9f0;
+      --success: #4ade80;
+      --warning: #facc15;
+      --danger: #f87171;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+      --sidebar-width: 250px;
+      --header-height: 70px;
+    }
+    
+    * {
       margin: 0;
-      height: 100vh;
-      background: linear-gradient(-45deg, #1abc9c, #16a085, #2c3e50, #34495e);
-      background-size: 400% 400%;
-      animation: moverFondo 15s ease infinite;
+      padding: 0;
+      box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      color: white;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 100;
+      box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      overflow-y: auto;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header h3 {
+      margin: 0;
+      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      gap: 10px;
     }
-
-    @keyframes moverFondo {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    
+    .sidebar-header h3 i {
+      background: rgba(255, 255, 255, 0.15);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    .dashboard {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      border-radius: 20px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 900px;
-      color: white;
+    
+    .nav-links {
+      padding: 20px 0;
     }
-
-    .dashboard h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .card-option {
-      background-color: rgba(255, 255, 255, 0.15);
-      border: none;
-      backdrop-filter: blur(6px);
-      border-radius: 15px;
-      color: white;
-      text-align: center;
-      transition: transform 0.3s ease, background 0.3s ease;
+    
+    .nav-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border-left: 4px solid transparent;
       cursor: pointer;
-      padding: 1.5rem;
     }
-
-    .card-option:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-5px);
+    
+    .nav-item:hover, .nav-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-left: 4px solid var(--accent);
     }
-
-    .card-option i {
+    
+    .nav-item i {
+      width: 24px;
+      text-align: center;
+      font-size: 18px;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: all 0.3s ease;
+    }
+    
+    /* Header */
+    .header {
+      height: var(--header-height);
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+    
+    .toggle-sidebar {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--dark);
+      cursor: pointer;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .notification {
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .user-role {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+    
+    /* Dashboard Content */
+    .content {
+      padding: 30px;
+    }
+    
+    .section-content {
+      display: none;
+    }
+    
+    .section-content.active {
+      display: block;
+    }
+    
+    /* Estilos para el dashboard */
+    .welcome-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 15px;
+      padding: 30px;
+      color: white;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .welcome-section::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    .welcome-section::after {
+      content: "";
+      position: absolute;
+      bottom: -80px;
+      right: 20px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+    
+    .welcome-content h1 {
       font-size: 2rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 10px;
     }
-
+    
+    .welcome-content p {
+      max-width: 600px;
+      opacity: 0.9;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+    }
+    
+    .stat-card.inventario::before { background: var(--primary); }
+    .stat-card.proveedores::before { background: var(--success); }
+    .stat-card.usuarios::before { background: var(--accent); }
+    .stat-card.alertas::before { background: var(--danger); }
+    
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .stat-card.inventario .stat-icon { background: rgba(67, 97, 238, 0.1); color: var(--primary); }
+    .stat-card.proveedores .stat-icon { background: rgba(74, 222, 128, 0.1); color: var(--success); }
+    .stat-card.usuarios .stat-icon { background: rgba(76, 201, 240, 0.1); color: var(--accent); }
+    .stat-card.alertas .stat-icon { background: rgba(248, 113, 113, 0.1); color: var(--danger); }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .stat-title {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+    
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    @media (max-width: 992px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .chart-container {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .chart-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .chart {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      border-radius: 10px;
+      color: var(--gray);
+      font-weight: 500;
+    }
+    
+    .recent-activity {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .activity-item {
+      display: flex;
+      padding: 15px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+    
+    .activity-icon.inventario { background: rgba(67, 97, 238, 0.1); color: var(--primary); }
+    .activity-icon.usuario { background: rgba(76, 201, 240, 0.1); color: var(--accent); }
+    .activity-icon.alerta { background: rgba(248, 113, 113, 0.1); color: var(--danger); }
+    .activity-icon.proveedor { background: rgba(74, 222, 128, 0.1); color: var(--success); }
+    
+    .activity-content {
+      flex: 1;
+    }
+    
+    .activity-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .activity-desc {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+    
+    .activity-time {
+      color: var(--gray);
+      font-size: 0.8rem;
+      text-align: right;
+      white-space: nowrap;
+      margin-left: 15px;
+    }
+    
+    /* Botón de logout */
     .logout-btn {
-      margin-top: 2rem;
-      background-color: #e74c3c;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: calc(100% - 40px);
+      margin: 20px;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
+    /* Estilos para la sección de inventario */
+    .inventario-section {
+      background-color: #f4f6f8;
+      padding: 20px;
+      border-radius: 15px;
+    }
+    
+    .inventario-section h2, .inventario-section h3 {
+      color: #2c3e50;
+    }
+    
+    .inventario-section label {
+      margin-top: 15px;
+      font-weight: bold;
+      display: block;
+      color: #1e293b;
+    }
+    
+    .inventario-section select, 
+    .inventario-section input[type="text"], 
+    .inventario-section input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: all 0.3s;
+      background-color: white;
+      font-size: 15px;
+    }
+    
+    .inventario-section select:focus, 
+    .inventario-section input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .inventario-section button {
+      background-color: var(--primary);
       color: white;
       border: none;
-      padding: 0.75rem 1.5rem;
+      padding: 12px 18px;
+      margin-top: 15px;
       border-radius: 8px;
-      transition: 0.3s ease;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-
-    .logout-btn:hover {
-      background-color: #c0392b;
+    
+    .inventario-section button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .inventario-section table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      margin-top: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .inventario-section th {
+      background-color: var(--primary);
+      color: white;
+      font-weight: 600;
+      padding: 14px;
+      text-align: left;
+    }
+    
+    .inventario-section td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      color: #374151;
+    }
+    
+    .inventario-section tr:hover td {
+      background-color: #f9fafb;
+    }
+    
+    .inventario-section td button {
+      background-color: transparent;
+      color: var(--danger);
+      font-size: 18px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    
+    .inventario-section td button:hover {
+      background-color: rgba(248, 113, 113, 0.1);
+    }
+    
+    .export-buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    
+    .export-buttons button {
+      flex: 1 1 200px;
+      background-color: var(--success);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .export-buttons button:hover {
+      background-color: #3ac36d;
+    }
+    
+    .flex-row {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    
+    .flex-row > input {
+      flex: 1 1 200px;
+      min-width: 180px;
+    }
+    
+    .chart-container-inv {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .chart-box {
+      flex: 1 1 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .chart-title {
+      text-align: center;
+      margin-bottom: 15px;
+      color: var(--dark);
+      font-weight: 600;
+      font-size: 18px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .header {
+        padding: 0 15px;
+      }
+      
+      .flex-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .export-buttons {
+        flex-direction: column;
+      }
+      
+      .export-buttons button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="dashboard">
-    <h1><i class="fas fa-user-shield me-2"></i>Panel del Administrador</h1>
-
-    <div class="row g-3">
-      <div class="col-md-4">
-        <div class="card-option" onclick="location.href='./inventario/inventario.html'">
-          <i class="fas fa-boxes"></i>
-          <p>Inventario</p>
-        </div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3><i class="fas fa-boxes"></i> CBC Inventario</h3>
+    </div>
+    
+    <div class="nav-links">
+      <div class="nav-item active" onclick="mostrarSeccion('dashboard-section')">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
       </div>
-      <div class="col-md-4">
-        <div class="card-option" onclick="location.href='../Admin/proveedores.html'">
-          <i class="fas fa-truck"></i>
-          <p>Proveedores</p>
-        </div>
+      <div class="nav-item" onclick="mostrarSeccion('inventario-section')">
+        <i class="fas fa-boxes"></i>
+        <span>Inventario</span>
       </div>
-      <div class="col-md-4">
-        <div class="card-option" onclick="location.href='../Admin/gestion_usuario.html'">
-          <i class="fas fa-users-cog"></i>
-          <p>Gestión de Usuarios</p>
-        </div>
+      <div class="nav-item" onclick="mostrarSeccion('proveedores-section')">
+        <i class="fas fa-truck"></i>
+        <span>Proveedores</span>
       </div>
-      <div class="col-md-4">
-        <div class="card-option" onclick="location.href='../../pagina prin/En_des.html'">
-          <i class="fas fa-newspaper"></i>
-          <p>Publicaciones</p>
-        </div>
+      <div class="nav-item" onclick="mostrarSeccion('usuarios-section')">
+        <i class="fas fa-users-cog"></i>
+        <span>Gestión de Usuarios</span>
       </div>
-      <div class="col-md-4">
-        <div class="card-option" onclick="location.href='../Admin/cap.html'">
-          <i class="fas fa-shield-alt"></i>
-          <p>Intentos Sospechosos</p>
+      <div class="nav-item" onclick="mostrarSeccion('sospechosos-section')">
+        <i class="fas fa-shield-alt"></i>
+        <span>Intentos Sospechosos</span>
+      </div>
+    </div>
+    
+    <button class="logout-btn" onclick="cerrarSesion()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Cerrar Sesión</span>
+    </button>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header">
+      <button class="toggle-sidebar" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <div class="header-right">
+        <div class="notification">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" id="notificationCount">3</span>
+        </div>
+        
+        <div class="user-profile">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info">
+            <div class="user-name" id="userName">Administrador Principal</div>
+            <div class="user-role">Administrador</div>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="text-center">
-      <button class="logout-btn mt-4" onclick="cerrarSesion()">
-        <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
-      </button>
+    
+    <!-- Dashboard Content -->
+    <div class="content">
+      <!-- Dashboard Section -->
+      <div class="section-content active" id="dashboard-section">
+        <div class="welcome-section">
+          <div class="welcome-content">
+            <h1>Bienvenido de nuevo, <span id="welcomeName">Administrador</span></h1>
+            <p>Aquí puedes gestionar todo el inventario de CBC Decoración, supervisar proveedores, usuarios y ver las estadísticas del sistema.</p>
+          </div>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card inventario" onclick="mostrarSeccion('inventario-section')">
+            <div class="stat-header">
+              <div>
+                <div class="stat-number" id="inventoryCount">1,248</div>
+                <div class="stat-title">Productos en Inventario</div>
+              </div>
+              <div class="stat-icon">
+                <i class="fas fa-boxes"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stat-card proveedores" onclick="mostrarSeccion('proveedores-section')">
+            <div class="stat-header">
+              <div>
+                <div class="stat-number" id="supplierCount">24</div>
+                <div class="stat-title">Proveedores Activos</div>
+              </div>
+              <div class="stat-icon">
+                <i class="fas fa-truck"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stat-card usuarios" onclick="mostrarSeccion('usuarios-section')">
+            <div class="stat-header">
+              <div>
+                <div class="stat-number" id="userCount">15</div>
+                <div class="stat-title">Usuarios Registrados</div>
+              </div>
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stat-card alertas" onclick="mostrarSeccion('sospechosos-section')">
+            <div class="stat-header">
+              <div>
+                <div class="stat-number" id="alertCount">3</div>
+                <div class="stat-title">Alertas de Seguridad</div>
+              </div>
+              <div class="stat-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-grid">
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3>Inventario por Categoría</h3>
+              <div>
+                <button class="btn btn-sm btn-outline-secondary">Esta semana</button>
+                <button class="btn btn-sm btn-primary">Este mes</button>
+              </div>
+            </div>
+            <div class="chart">
+              <canvas id="inventoryChart"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3>Actividad del Sistema</h3>
+            </div>
+            <div class="chart">
+              <canvas id="activityChart"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <div class="recent-activity">
+          <div class="chart-header">
+            <h3>Actividad Reciente</h3>
+            <a href="#">Ver todo</a>
+          </div>
+          
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon inventario">
+                <i class="fas fa-box"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">Nuevo producto agregado</div>
+                <div class="activity-desc">Sofá de 3 plazas modelo Barcelona fue agregado al inventario</div>
+              </div>
+              <div class="activity-time">Hace 2 horas</div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-icon usuario">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">Nuevo usuario registrado</div>
+                <div class="activity-desc">Carlos Rodríguez fue registrado como empleado</div>
+              </div>
+              <div class="activity-time">Hace 5 horas</div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-icon proveedor">
+                <i class="fas fa-truck-loading"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">Pedido a proveedor</div>
+                <div class="activity-desc">Se realizó pedido de 50 unidades a Muebles del Norte</div>
+              </div>
+              <div class="activity-time">Ayer, 15:30</div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-icon alerta">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">Intento sospechoso detectado</div>
+                <div class="activity-desc">Se registró un intento de acceso no autorizado</div>
+              </div>
+              <div class="activity-time">Ayer, 10:15</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Inventario Section -->
+      <div class="section-content inventario-section" id="inventario-section">
+        <h2><i class="fas fa-boxes me-2"></i> Gestión de Inventario</h2>
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label for="categoria">Selecciona Categoría:</label>
+            <select class="form-select" id="categoria" onchange="mostrarProductos(); actualizarGraficas()">
+              <option value="">-- Todas las Categorías (para búsqueda global) --</option>
+              <option value="lavamanos">Lavamanos</option>
+              <option value="muebles">Muebles</option>
+              <option value="sanitarios">Sanitarios</option>
+              <option value="grifos">Grifos</option>
+              <option value="accesorios">Accesorios</option>
+            </select>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="buscar">Buscar (global en todas las categorías):</label>
+            <input type="text" class="form-control" id="buscar" oninput="filtrarProductos()" placeholder="Buscar por nombre o código...">
+          </div>
+        </div>
+        
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="fas fa-plus-circle me-2"></i> Agregar Producto</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <input type="text" class="form-control" id="codigo" placeholder="Código" required>
+              </div>
+              <div class="col-md-3">
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre" required>
+              </div>
+              <div class="col-md-2">
+                <input type="number" class="form-control" id="precio" placeholder="Precio" min="0" step="0.01" required>
+              </div>
+              <div class="col-md-2">
+                <input type="number" class="form-control" id="Precio_costos" placeholder="Precio costos" min="0" step="0.01" required>
+              </div>
+              <div class="col-md-2">
+                <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" min="0" step="1" required>
+              </div>
+            </div>
+            <button class="btn btn-primary mt-3" onclick="agregarProducto()">
+              <i class="fas fa-plus me-1"></i> Agregar Producto
+            </button>
+          </div>
+        </div>
+        
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0"><i class="fas fa-box-open me-2"></i> Inventario</h3>
+            <div class="export-buttons">
+              <button class="btn btn-sm btn-success" onclick="exportar('pdf')">
+                <i class="fas fa-file-pdf me-1"></i> Exportar PDF
+              </button>
+              <button class="btn btn-sm btn-success" onclick="exportar('excel')">
+                <i class="fas fa-file-excel me-1"></i> Exportar Excel
+              </button>
+              <button class="btn btn-sm btn-success" onclick="exportar('pdf', true)">
+                <i class="fas fa-file-pdf me-1"></i> Todo el Inventario
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0" id="tablaProductos">
+                <thead>
+                  <tr>
+                    <th>Categoría</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Precio costo</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="fas fa-file-import me-2"></i> Importar desde Excel</h3>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="importarArchivo" class="form-label"><strong>Seleccionar archivo Excel (Formato: Categoría, Código, Nombre, Precio, Precio costos, Cantidad)</strong></label>
+              <input class="form-control" type="file" id="importarArchivo" accept=".xlsx, .xls">
+            </div>
+            <button class="btn btn-primary" onclick="importarExcel()">
+              <i class="fas fa-file-import me-1"></i> Importar Excel
+            </button>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="fas fa-chart-bar me-2"></i> Análisis de Inventario</h3>
+          </div>
+          <div class="card-body">
+            <div class="chart-container-inv">
+              <div class="chart-box">
+                <div class="chart-title">Productos por Categoría</div>
+                <canvas id="chartCategorias" height="250"></canvas>
+              </div>
+              
+              <div class="chart-box">
+                <div class="chart-title">Valor del Inventario por Categoría</div>
+                <canvas id="chartValorInventario" height="250"></canvas>
+              </div>
+              
+              <div class="chart-box">
+                <div class="chart-title">Productos con Bajo Stock (&lt;5 unidades)</div>
+                <canvas id="chartBajoStock" height="250"></canvas>
+              </div>
+              
+              <div class="chart-box">
+                <div class="chart-title">Margen de Beneficio Promedio</div>
+                <canvas id="chartMargenBeneficio" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Bootstrap JS y Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <script>
+    // Variables globales para inventario
+    const categorias = ["lavamanos", "muebles", "sanitarios", "grifos", "accesorios"];
+    let chartCategorias, chartValorInventario, chartBajoStock, chartMargenBeneficio;
+    let dashboardInventoryChart, dashboardActivityChart;
+
     // Validación de sesión
     window.addEventListener('load', () => {
       const usuario = sessionStorage.getItem('usuario');
       const rol = sessionStorage.getItem('rol');
+      
+      if (usuario) {
+        document.getElementById('userName').textContent = usuario;
+        document.getElementById('welcomeName').textContent = usuario;
+        document.getElementById('userAvatar').textContent = usuario.charAt(0).toUpperCase();
+      }
 
       if (!usuario || rol !== 'administrador') {
         window.location.href = "../../Pages/index.html";
       }
+      
+      // Inicializar inventario
+      initInventario();
+      // Inicializar gráficos del dashboard
+      initCharts();
     });
 
     function cerrarSesion() {
       sessionStorage.clear();
       window.location.href = "../../Pages/index.html";
     }
-  </script>
+    
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+    
+    // Navegación entre secciones
+    function mostrarSeccion(idSeccion) {
+      // Ocultar todas las secciones
+      document.querySelectorAll('.section-content').forEach(seccion => {
+        seccion.classList.remove('active');
+      });
+      
+      // Mostrar la sección seleccionada
+      document.getElementById(idSeccion).classList.add('active');
+      
+      // Actualizar menú activo
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Encontrar el ítem de menú correspondiente y activarlo
+      const secciones = {
+        'dashboard-section': 0,
+        'inventario-section': 1,
+        'proveedores-section': 2,
+        'usuarios-section': 3,
+        'sospechosos-section': 4
+      };
+      
+      if (secciones[idSeccion] !== undefined) {
+        document.querySelectorAll('.nav-item')[secciones[idSeccion]].classList.add('active');
+      }
+    }
+    
+    // Inicializar inventario
+    function initInventario() {
+      // Inicializar categorías si no existen
+      categorias.forEach(cat => {
+        if (!localStorage.getItem(cat)) {
+          localStorage.setItem(cat, JSON.stringify([]));
+        }
+      });
+      
+      mostrarProductos();
+      actualizarGraficas();
+      actualizarContadores();
+    }
+    
+    // Actualizar contadores del dashboard
+    function actualizarContadores() {
+      // Contador de productos
+      let totalProductos = 0;
+      categorias.forEach(cat => {
+        const productos = JSON.parse(localStorage.getItem(cat)) || [];
+        totalProductos += productos.length;
+      });
+      document.getElementById('inventoryCount').textContent = totalProductos.toLocaleString();
+      
+      // Actualizar otros contadores según sea necesario
+    }
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    function obtenerCategoria() {
+      return document.getElementById("categoria").value.toLowerCase();
+    }
+
+    function mostrarProductos(filtrados = null) {
+      const tbody = document.querySelector("#tablaProductos tbody");
+      tbody.innerHTML = "";
+
+      let productosAMostrar = [];
+
+      if (filtrados) {
+        productosAMostrar = filtrados;
+      } else {
+        const categoria = obtenerCategoria();
+        if (categoria) {
+          productosAMostrar = JSON.parse(localStorage.getItem(categoria)) || [];
+          productosAMostrar = productosAMostrar.map(p => ({ ...p, categoria }));
+        } else {
+          // Mostrar todo inventario
+          productosAMostrar = [];
+          for (let cat of categorias) {
+            let prods = JSON.parse(localStorage.getItem(cat)) || [];
+            prods = prods.map(p => ({ ...p, categoria: cat }));
+            productosAMostrar = productosAMostrar.concat(prods);
+          }
+        }
+      }
+
+      productosAMostrar.forEach((prod) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${prod.categoria}</td>
+          <td>${prod.codigo}</td>
+          <td>${prod.nombre}</td>
+          <td>$${prod.precio.toFixed(2)}</td>
+          <td>$${prod.Precio_costos.toFixed(2)}</td>
+          <td>${prod.cantidad}</td>
+          <td>
+            <button onclick="eliminarProductoPorCodigo('${prod.codigo}')"><i class="fas fa-trash-alt"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      actualizarContadores();
+    }
+
+    function eliminarProductoPorCodigo(codigo) {
+      if (!confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
+      
+      for (let cat of categorias) {
+        let productos = JSON.parse(localStorage.getItem(cat)) || [];
+        const index = productos.findIndex(p => p.codigo === codigo);
+        if (index > -1) {
+          productos.splice(index, 1);
+          localStorage.setItem(cat, JSON.stringify(productos));
+          break;
+        }
+      }
+      filtrarProductos();
+      actualizarGraficas();
+    }
+
+    function agregarProducto() {
+      const categoria = obtenerCategoria();
+      const codigo = document.getElementById("codigo").value.trim();
+      const nombre = document.getElementById("nombre").value.trim();
+      const precio = parseFloat(document.getElementById("precio").value);
+      const Precio_costos = parseFloat(document.getElementById("Precio_costos").value);
+      const cantidad = parseInt(document.getElementById("cantidad").value);
+      
+      if (!categoria) {
+        alert("Selecciona una categoría para agregar producto.");
+        return;
+      }
+      if (!codigo || !nombre || isNaN(precio) || isNaN(Precio_costos) || isNaN(cantidad)) {
+        alert("Todos los campos son obligatorios y deben ser válidos.");
+        return;
+      }
+
+      const productos = JSON.parse(localStorage.getItem(categoria)) || [];
+      if (productos.find(p => p.codigo === codigo)) {
+        alert("Ya existe un producto con ese código en esta categoría.");
+        return;
+      }
+
+      productos.push({ codigo, nombre, precio, Precio_costos, cantidad });
+      localStorage.setItem(categoria, JSON.stringify(productos));
+
+      // Limpiar inputs
+      document.getElementById("codigo").value = "";
+      document.getElementById("nombre").value = "";
+      document.getElementById("precio").value = "";
+      document.getElementById("Precio_costos").value = "";
+      document.getElementById("cantidad").value = "";
+       
+      mostrarProductos();
+      actualizarGraficas();
+    }
+
+    function filtrarProductos() {
+      const busqueda = document.getElementById("buscar").value.toLowerCase();
+      const categoria = obtenerCategoria();
+
+      let productosAMostrar = [];
+
+      if (categoria) {
+        let prods = JSON.parse(localStorage.getItem(categoria)) || [];
+        productosAMostrar = prods.filter(p =>
+          p.nombre.toLowerCase().includes(busqueda) ||
+          p.codigo.toLowerCase().includes(busqueda)
+        ).map(p => ({ ...p, categoria }));
+      } else {
+        for (let cat of categorias) {
+          let prods = JSON.parse(localStorage.getItem(cat)) || [];
+          let filtrados = prods.filter(p =>
+            p.nombre.toLowerCase().includes(busqueda) ||
+            p.codigo.toLowerCase().includes(busqueda)
+          ).map(p => ({ ...p, categoria: cat }));
+          productosAMostrar = productosAMostrar.concat(filtrados);
+        }
+      }
+      mostrarProductos(productosAMostrar);
+    }
+
+    function exportar(tipo, todo = false) {
+      let productosAExportar = [];
+      if (todo) {
+        for (let cat of categorias) {
+          let prods = JSON.parse(localStorage.getItem(cat)) || [];
+          prods = prods.map(p => ({ ...p, categoria: cat }));
+          productosAExportar = productosAExportar.concat(prods);
+        }
+      } else {
+        const categoria = obtenerCategoria();
+        if (!categoria) {
+          alert("Selecciona una categoría para exportar o usa la opción de todo inventario.");
+          return;
+        }
+        productosAExportar = JSON.parse(localStorage.getItem(categoria)) || [];
+        productosAExportar = productosAExportar.map(p => ({ ...p, categoria }));
+      }
+
+      if (productosAExportar.length === 0) {
+        alert("No hay productos para exportar.");
+        return;
+      }
+
+      if (tipo === "pdf") {
+        exportarPDF(productosAExportar);
+      } else if (tipo === "excel") {
+        exportarExcel(productosAExportar);
+      }
+    }
+
+    function exportarPDF(productos) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const columnas = ["Categoría", "Código", "Nombre", "Precio", "Precio costos", "Cantidad"];
+      const filas = productos.map(p => [
+        p.categoria, p.codigo, p.nombre, `$${p.precio.toFixed(2)}`, `$${p.Precio_costos.toFixed(2)}`, p.cantidad
+      ]);
+
+      doc.text("Inventario CBC", 14, 15);
+      doc.autoTable({
+        head: [columnas],
+        body: filas,
+        startY: 20,
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [67, 97, 238] }
+      });
+      doc.save("inventario_cbc.pdf");
+    }
+
+    function exportarExcel(productos) {
+      const wb = XLSX.utils.book_new();
+      const ws_data = [
+        ["Categoría", "Código", "Nombre", "Precio", "Precio costos", "Cantidad"],
+        ...productos.map(p => [p.categoria, p.codigo, p.nombre, p.precio, p.Precio_costos, p.cantidad])
+      ];
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "Inventario");
+      XLSX.writeFile(wb, "inventario_cbc.xlsx");
+    }
+
+    function importarExcel() {
+      const archivoInput = document.getElementById("importarArchivo");
+      if (!archivoInput.files.length) {
+        alert("Selecciona un archivo Excel para importar.");
+        return;
+      }
+
+      const archivo = archivoInput.files[0];
+      const lector = new FileReader();
+
+      lector.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const nombreHoja = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[nombreHoja];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: ["categoria", "codigo", "nombre", "precio", "Precio_costos", "cantidad"], defval: "" });
+
+        if (jsonData.length === 0) {
+          alert("El archivo Excel está vacío o tiene formato incorrecto.");
+          return;
+        }
+
+        // La primera fila será el encabezado, ignorar si es la cabecera literal:
+        let datos = jsonData;
+        if (jsonData[0].categoria.toLowerCase() === "categoría" || jsonData[0].categoria.toLowerCase() === "categoria") {
+          datos = jsonData.slice(1);
+        }
+
+        // Validar y agregar productos
+        let errores = [];
+        datos.forEach((fila, index) => {
+          const categoria = fila.categoria.toLowerCase().trim();
+          const codigo = String(fila.codigo).trim();
+          const nombre = String(fila.nombre).trim();
+          const precio = parseFloat(fila.precio);
+          const Precio_costos = parseFloat(fila.Precio_costos);
+          const cantidad = parseInt(fila.cantidad);
+
+          if (!categorias.includes(categoria)) {
+            errores.push(`Fila ${index + 2}: Categoría inválida (${fila.categoria}).`);
+            return;
+          }
+          if (!codigo || !nombre || isNaN(precio) || isNaN(cantidad)) {
+            errores.push(`Fila ${index + 2}: Datos incompletos o inválidos.`);
+            return;
+          }
+
+          let productos = JSON.parse(localStorage.getItem(categoria)) || [];
+          if (!productos.find(p => p.codigo === codigo)) {
+            productos.push({ codigo, nombre, precio, Precio_costos, cantidad, comentario: "" });
+            localStorage.setItem(categoria, JSON.stringify(productos));
+          }
+        });
+
+        if (errores.length) {
+          alert("Se importaron algunos productos, pero hubo errores:\n" + errores.join("\n"));
+        } else {
+          alert("Productos importados con éxito.");
+        }
+        mostrarProductos();
+        actualizarGraficas();
+        archivoInput.value = ""; // Reset file input
+      };
+
+      lector.readAsArrayBuffer(archivo);
+    }
+
+    // Funciones para las gráficas de inventario
+    function actualizarGraficas() {
+      // 1. Productos por categoría
+      const datosCategorias = categorias.map(cat => {
+        const productos = JSON.parse(localStorage.getItem(cat)) || [];
+        return productos.length;
+      });
+
+      if (chartCategorias) chartCategorias.destroy();
+      const ctx1 = document.getElementById('chartCategorias').getContext('2d');
+      chartCategorias = new Chart(ctx1, {
+        type: 'pie',
+        data: {
+          labels: categorias,
+          datasets: [{
+            data: datosCategorias,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw} productos`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // 2. Valor del inventario por categoría
+      const valorInventario = categorias.map(cat => {
+        const productos = JSON.parse(localStorage.getItem(cat)) || [];
+        const total = productos.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
+        return parseFloat(total.toFixed(2));
+      });
+
+      if (chartValorInventario) chartValorInventario.destroy();
+      const ctx2 = document.getElementById('chartValorInventario').getContext('2d');
+      chartValorInventario = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: categorias,
+          datasets: [{
+            label: 'Valor del Inventario ($)',
+            data: valorInventario,
+            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'Valor ($)' }
+            }
+          }
+        }
+      });
+
+      // 3. Productos con bajo stock (<5 unidades)
+      const umbral = 5;
+      const bajoStockData = categorias.map(cat => {
+        const productos = JSON.parse(localStorage.getItem(cat)) || [];
+        return productos.filter(p => p.cantidad < umbral).length;
+      });
+
+      if (chartBajoStock) chartBajoStock.destroy();
+      const ctx3 = document.getElementById('chartBajoStock').getContext('2d');
+      chartBajoStock = new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+          labels: categorias,
+          datasets: [{
+            label: 'Productos con bajo stock',
+            data: bajoStockData,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(255, 159, 64, 0.7)',
+              'rgba(255, 205, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw} productos con stock < ${umbral}`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // 4. Margen de beneficio promedio por categoría
+      const margenData = categorias.map(cat => {
+        const productos = JSON.parse(localStorage.getItem(cat)) || [];
+        const margenes = productos
+          .filter(p => p.Precio_costos > 0)
+          .map(p => ((p.precio - p.Precio_costos) / p.Precio_costos) * 100);
+        
+        if (margenes.length === 0) return 0;
+        const promedio = margenes.reduce((sum, m) => sum + m, 0) / margenes.length;
+        return parseFloat(promedio.toFixed(2));
+      });
+
+      if (chartMargenBeneficio) chartMargenBeneficio.destroy();
+      const ctx4 = document.getElementById('chartMargenBeneficio').getContext('2d');
+      chartMargenBeneficio = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+          labels: categorias,
+          datasets: [{
+            label: 'Margen de Beneficio Promedio (%)',
+            data: margenData,
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'Margen (%)' }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.raw}% de margen promedio`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // Gráficos del dashboard
+    function initCharts() {
+      // Gráfico de inventario
+      const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+      dashboardInventoryChart = new Chart(inventoryCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Sofás', 'Mesas', 'Sillas', 'Armarios', 'Decoración'],
+          datasets: [{
+            data: [25, 18, 15, 22, 20],
+            backgroundColor: [
+              '#4361ee',
+              '#4cc9f0',
+              '#4ade80',
+              '#facc15',
+              '#f87171'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+      
+      // Gráfico de actividad
+      const activityCtx = document.getElementById('activityChart').getContext('2d');
+      dashboardActivityChart = new Chart(activityCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+          datasets: [{
+            label: 'Actividad',
+            data: [45, 60, 40, 75, 65, 55, 30],
+            backgroundColor: '#4361ee',
+            borderRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 20
+              }
+            }
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
