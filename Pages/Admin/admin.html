@@ -633,6 +633,392 @@
         width: 100%;
       }
     }
+     /* Estilos para la sección de proveedores */
+    .proveedores-section {
+      background-color: #f4f6f8;
+      padding: 20px;
+      border-radius: 15px;
+    }
+    
+    .proveedores-section h2 {
+      color: #2c3e50;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .proveedores-section h2 i {
+      background: rgba(74, 222, 128, 0.2);
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--success);
+    }
+    
+    .card-proveedores {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .card-proveedores h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .card-proveedores h3 i {
+      background: rgba(67, 97, 238, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-group label {
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 0.95rem;
+    }
+    
+    .form-group input {
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background: white;
+      color: var(--dark);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .btn-proveedores {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      gap: 8px;
+    }
+    
+    .btn-proveedores i {
+      font-size: 1.1rem;
+    }
+    
+    .btn-primary-proveedores {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary-proveedores:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-success-proveedores {
+      background: var(--success);
+      color: white;
+    }
+    
+    .btn-success-proveedores:hover {
+      background: #219653;
+      transform: translateY(-2px);
+    }
+    
+    .btn-outline-proveedores {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline-proveedores:hover {
+      background: rgba(67, 97, 238, 0.1);
+    }
+    
+    .actions-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .file-upload {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border: 1px dashed #d1d5db;
+    }
+    
+    .file-upload input {
+      flex-grow: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+    }
+    
+    .search-container {
+      display: flex;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    
+    .search-container input {
+      flex-grow: 1;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 1rem;
+    }
+    
+    .tabla-scroll {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      margin-top: 20px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .tabla-proveedores {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .tabla-proveedores th {
+      background: rgba(67, 97, 238, 0.8);
+      position: sticky;
+      top: 0;
+      color: white;
+      text-align: left;
+      font-weight: 600;
+      padding: 14px;
+    }
+    
+    .tabla-proveedores th, 
+    .tabla-proveedores td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .tabla-proveedores td {
+      color: #374151;
+    }
+    
+    .tabla-proveedores tr:hover td {
+      background-color: #f9fafb;
+    }
+    
+    .tabla-proveedores td input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    
+    .tabla-proveedores td input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    
+    .actions-cell {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-sm-proveedores {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      min-width: 90px;
+    }
+    
+    .btn-icon {
+      padding: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+    
+    .btn-icon i {
+      margin: 0;
+    }
+    
+    .btn-edit {
+      background: rgba(76, 201, 240, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(76, 201, 240, 0.2);
+    }
+    
+    .btn-edit:hover {
+      background: rgba(76, 201, 240, 0.2);
+    }
+    
+    .btn-delete {
+      background: rgba(248, 113, 113, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(248, 113, 113, 0.2);
+    }
+    
+    .btn-delete:hover {
+      background: rgba(248, 113, 113, 0.2);
+    }
+    
+    .estado-badge {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: inline-block;
+    }
+    
+    .estado-activo {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--success);
+    }
+    
+    .estado-inactivo {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--danger);
+    }
+    
+    .estado-pendiente {
+      background: rgba(250, 204, 21, 0.15);
+      color: var(--warning);
+    }
+    
+    .notification-proveedores {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+    }
+    
+    .notification-proveedores.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .notification-success {
+      background: var(--success);
+    }
+    
+    .notification-error {
+      background: var(--danger);
+    }
+    
+    .notification-warning {
+      background: var(--warning);
+    }
+    
+    .input-error {
+      border: 1px solid var(--danger) !important;
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2) !important;
+    }
+    
+    .error-message {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .header {
+        padding: 0 15px;
+      }
+      
+      .flex-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .export-buttons {
+        flex-direction: column;
+      }
+      
+      .export-buttons button {
+        width: 100%;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .actions-container {
+        flex-direction: column;
+      }
+      
+      .file-upload {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1598,6 +1984,456 @@
           }
         }
       });
+    }
+
+      <!-- Proveedores Section -->
+      <div class="section-content proveedores-section" id="proveedores-section">
+        <h2><i class="fas fa-truck"></i> Gestión de Proveedores</h2>
+        
+        <div class="card-proveedores">
+          <h3><i class="fas fa-plus-circle"></i> Agregar Nuevo Proveedor</h3>
+          
+          <form id="formulario-proveedor">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="id">ID Proveedor *</label>
+                <input type="text" id="id" placeholder="Ej: PRV-001" required />
+                <div class="error-message" id="id-error">El ID ya existe o es inválido</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="empresa">Empresa *</label>
+                <input type="text" id="empresa" placeholder="Nombre de la empresa" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="contacto">Contacto *</label>
+                <input type="text" id="contacto" placeholder="Nombre de contacto" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="telefono">Teléfono *</label>
+                <input type="tel" id="telefono" placeholder="Número de teléfono" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="cuenta">Cuenta *</label>
+                <input type="text" id="cuenta" placeholder="Número de cuenta" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="estado">Estado</label>
+                <select id="estado">
+                  <option value="activo">Activo</option>
+                  <option value="inactivo">Inactivo</option>
+                  <option value="pendiente">Pendiente</option>
+                </select>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn-proveedores btn-primary-proveedores">
+              <i class="fas fa-plus"></i> Agregar Proveedor
+            </button>
+          </form>
+        </div>
+        
+        <div class="card-proveedores">
+          <h3><i class="fas fa-file-import"></i> Importar/Exportar Datos</h3>
+          
+          <div class="file-upload">
+            <input type="file" id="archivo-excel" accept=".xlsx" />
+            <button onclick="cargarExcel()" class="btn-proveedores btn-outline-proveedores">
+              <i class="fas fa-upload"></i> Cargar Excel
+            </button>
+          </div>
+          
+          <div class="actions-container">
+            <button onclick="exportarExcel()" class="btn-proveedores btn-success-proveedores">
+              <i class="fas fa-file-excel"></i> Exportar a Excel
+            </button>
+            <button class="btn-proveedores btn-outline-proveedores" onclick="generarReporteProveedores()">
+              <i class="fas fa-chart-bar"></i> Generar Reporte
+            </button>
+            <button class="btn-proveedores btn-outline-proveedores" onclick="mostrarSeccion('dashboard-section')">
+              <i class="fas fa-arrow-left"></i> Volver al Dashboard
+            </button>
+          </div>
+        </div>
+        
+        <div class="card-proveedores">
+          <h3><i class="fas fa-list"></i> Lista de Proveedores</h3>
+          
+          <div class="search-container">
+            <input type="text" id="search-input-proveedores" placeholder="Buscar proveedores..." />
+            <button class="btn-proveedores btn-primary-proveedores" onclick="filtrarProveedores()">
+              <i class="fas fa-search"></i> Buscar
+            </button>
+          </div>
+          
+          <div class="tabla-scroll">
+            <table class="tabla-proveedores">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Empresa</th>
+                  <th>Contacto</th>
+                  <th>Teléfono</th>
+                  <th>Cuenta</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-proveedores">
+                <!-- Los proveedores se cargarán aquí -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS y Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    // Datos iniciales de ejemplo para proveedores
+    let proveedores = JSON.parse(localStorage.getItem('proveedores')) || [
+      {id: "PRV-001", empresa: "Suministros Industriales SA", contacto: "Carlos Martínez", telefono: "555-1234", cuenta: "ES12 3456 7890 1234 5678", estado: "activo"},
+      {id: "PRV-002", empresa: "Tecnología Avanzada", contacto: "Laura González", telefono: "555-5678", cuenta: "ES98 7654 3210 9876 5432", estado: "activo"},
+      {id: "PRV-003", empresa: "Materiales de Construcción", contacto: "Roberto Sánchez", telefono: "555-9012", cuenta: "ES45 6789 0123 4567 8901", estado: "inactivo"},
+      {id: "PRV-004", empresa: "Soluciones Logísticas", contacto: "Marta Rodríguez", telefono: "555-3456", cuenta: "ES23 4567 8901 2345 6789", estado: "pendiente"}
+    ];
+    
+    // Validación de sesión
+    window.addEventListener('load', () => {
+      const usuario = sessionStorage.getItem('usuario');
+      const rol = sessionStorage.getItem('rol');
+      
+      if (usuario) {
+        document.getElementById('userName').textContent = usuario;
+        document.getElementById('userAvatar').textContent = usuario.charAt(0).toUpperCase();
+      }
+
+      if (!usuario || rol !== 'administrador') {
+        window.location.href = "../../Pages/index.html";
+      }
+      
+      // Inicializar proveedores
+      initProveedores();
+    });
+
+    function cerrarSesion() {
+      sessionStorage.clear();
+      window.location.href = "../../Pages/index.html";
+    }
+    
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+    
+    // Navegación entre secciones
+    function mostrarSeccion(idSeccion) {
+      // Ocultar todas las secciones
+      document.querySelectorAll('.section-content').forEach(seccion => {
+        seccion.classList.remove('active');
+      });
+      
+      // Mostrar la sección seleccionada
+      document.getElementById(idSeccion).classList.add('active');
+      
+      // Actualizar menú activo
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Encontrar el ítem de menú correspondiente y activarlo
+      const secciones = {
+        'dashboard-section': 0,
+        'inventario-section': 1,
+        'proveedores-section': 2,
+        'usuarios-section': 3,
+        'sospechosos-section': 4
+      };
+      
+      if (secciones[idSeccion] !== undefined) {
+        document.querySelectorAll('.nav-item')[secciones[idSeccion]].classList.add('active');
+      }
+    }
+    
+    // Inicializar gestión de proveedores
+    function initProveedores() {
+      const formulario = document.getElementById("formulario-proveedor");
+      const tabla = document.getElementById("tabla-proveedores");
+      const idError = document.getElementById("id-error");
+      
+      // Mostrar proveedores al cargar la página
+      mostrarProveedores();
+      
+      // Manejar envío del formulario
+      formulario.addEventListener("submit", function (e) {
+        e.preventDefault();
+        
+        const id = document.getElementById("id").value.trim();
+        const empresa = document.getElementById("empresa").value.trim();
+        const contacto = document.getElementById("contacto").value.trim();
+        const telefono = document.getElementById("telefono").value.trim();
+        const cuenta = document.getElementById("cuenta").value.trim();
+        const estado = document.getElementById("estado").value;
+        
+        // Validar ID único
+        if (proveedores.some(proveedor => proveedor.id === id)) {
+          document.getElementById("id").classList.add("input-error");
+          idError.style.display = "block";
+          mostrarNotificacion("El ID ya existe o es inválido", "error");
+          return;
+        } else {
+          document.getElementById("id").classList.remove("input-error");
+          idError.style.display = "none";
+        }
+        
+        // Crear nuevo proveedor
+        const proveedor = {
+          id,
+          empresa,
+          contacto,
+          telefono,
+          cuenta,
+          estado
+        };
+        
+        proveedores.push(proveedor);
+        formulario.reset();
+        mostrarProveedores();
+        guardarProveedores();
+        mostrarNotificacion("Proveedor agregado correctamente", "success");
+      });
+      
+      // Permitir búsqueda al presionar Enter
+      document.getElementById("search-input-proveedores").addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+          filtrarProveedores();
+        }
+      });
+    }
+    
+    // Mostrar proveedores en la tabla
+    function mostrarProveedores() {
+      const tabla = document.getElementById("tabla-proveedores");
+      tabla.innerHTML = "";
+      
+      if (proveedores.length === 0) {
+        tabla.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--gray);">No hay proveedores registrados</td></tr>`;
+        return;
+      }
+      
+      proveedores.forEach((prov, index) => {
+        const fila = document.createElement("tr");
+        
+        // Determinar clase de estado
+        let estadoClass = "";
+        if (prov.estado === "activo") estadoClass = "estado-activo";
+        else if (prov.estado === "inactivo") estadoClass = "estado-inactivo";
+        else if (prov.estado === "pendiente") estadoClass = "estado-pendiente";
+        
+        fila.innerHTML = `
+          <td>${prov.id}</td>
+          <td>${prov.empresa}</td>
+          <td>${prov.contacto}</td>
+          <td>${prov.telefono}</td>
+          <td>${prov.cuenta}</td>
+          <td><span class="estado-badge ${estadoClass}">${prov.estado}</span></td>
+          <td class="actions-cell">
+            <button class="btn-icon btn-edit" onclick="editarProveedor(${index})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-icon btn-delete" onclick="eliminarProveedor(${index})">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        `;
+        tabla.appendChild(fila);
+      });
+    }
+    
+    // Editar proveedor
+    function editarProveedor(index) {
+      const prov = proveedores[index];
+      
+      // Llenar formulario con datos del proveedor
+      document.getElementById("id").value = prov.id;
+      document.getElementById("id").disabled = true; // No permitir editar ID
+      document.getElementById("empresa").value = prov.empresa;
+      document.getElementById("contacto").value = prov.contacto;
+      document.getElementById("telefono").value = prov.telefono;
+      document.getElementById("cuenta").value = prov.cuenta;
+      document.getElementById("estado").value = prov.estado;
+      
+      // Cambiar el botón de agregar a actualizar
+      const submitBtn = document.querySelector("#formulario-proveedor button[type='submit']");
+      submitBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Actualizar Proveedor';
+      submitBtn.onclick = function(e) {
+        e.preventDefault();
+        
+        // Actualizar datos
+        proveedores[index].empresa = document.getElementById("empresa").value.trim();
+        proveedores[index].contacto = document.getElementById("contacto").value.trim();
+        proveedores[index].telefono = document.getElementById("telefono").value.trim();
+        proveedores[index].cuenta = document.getElementById("cuenta").value.trim();
+        proveedores[index].estado = document.getElementById("estado").value;
+        
+        guardarProveedores();
+        mostrarProveedores();
+        mostrarNotificacion("Proveedor actualizado correctamente", "success");
+        
+        // Resetear formulario
+        document.getElementById("formulario-proveedor").reset();
+        document.getElementById("id").disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-plus"></i> Agregar Proveedor';
+        submitBtn.onclick = null;
+      };
+    }
+    
+    // Eliminar proveedor
+    function eliminarProveedor(index) {
+      if (confirm("¿Estás seguro de eliminar este proveedor?")) {
+        proveedores.splice(index, 1);
+        mostrarProveedores();
+        guardarProveedores();
+        mostrarNotificacion("Proveedor eliminado correctamente", "success");
+      }
+    }
+    
+    // Cargar desde Excel
+    function cargarExcel() {
+      const archivo = document.getElementById('archivo-excel').files[0];
+      if (!archivo) {
+        mostrarNotificacion("Por favor, seleccione un archivo Excel", "error");
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const nuevosProveedores = XLSX.utils.sheet_to_json(sheet);
+          
+          // Validar estructura básica
+          if (nuevosProveedores.length > 0 && 
+              nuevosProveedores[0].hasOwnProperty('id') && 
+              nuevosProveedores[0].hasOwnProperty('empresa')) {
+            
+            // Reemplazar proveedores actuales
+            proveedores = nuevosProveedores;
+            mostrarProveedores();
+            guardarProveedores();
+            mostrarNotificacion(`Se cargaron ${nuevosProveedores.length} proveedores desde Excel`, "success");
+          } else {
+            mostrarNotificacion("El archivo Excel no tiene el formato correcto", "error");
+          }
+        } catch (error) {
+          mostrarNotificacion("Error al procesar el archivo Excel", "error");
+          console.error(error);
+        }
+      };
+      reader.readAsArrayBuffer(archivo);
+    }
+    
+    // Exportar a Excel
+    function exportarExcel() {
+      if (proveedores.length === 0) {
+        mostrarNotificacion("No hay datos para exportar", "warning");
+        return;
+      }
+      
+      try {
+        const hoja = XLSX.utils.json_to_sheet(proveedores);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, 'Proveedores');
+        XLSX.writeFile(libro, 'Proveedores_CBC.xlsx');
+        mostrarNotificacion("Archivo Excel exportado correctamente", "success");
+      } catch (error) {
+        mostrarNotificacion("Error al exportar a Excel", "error");
+        console.error(error);
+      }
+    }
+    
+    // Filtrar proveedores
+    function filtrarProveedores() {
+      const searchTerm = document.getElementById("search-input-proveedores").value.toLowerCase();
+      
+      if (!searchTerm) {
+        mostrarProveedores();
+        return;
+      }
+      
+      const filtered = proveedores.filter(prov => 
+        prov.id.toLowerCase().includes(searchTerm) ||
+        prov.empresa.toLowerCase().includes(searchTerm) ||
+        prov.contacto.toLowerCase().includes(searchTerm) ||
+        prov.telefono.toLowerCase().includes(searchTerm) ||
+        prov.cuenta.toLowerCase().includes(searchTerm)
+      );
+      
+      // Mostrar resultados filtrados
+      const tabla = document.getElementById("tabla-proveedores");
+      tabla.innerHTML = "";
+      filtered.forEach((prov, index) => {
+        const fila = document.createElement("tr");
+        let estadoClass = prov.estado === "activo" ? "estado-activo" : 
+                         prov.estado === "inactivo" ? "estado-inactivo" : "estado-pendiente";
+                         
+        fila.innerHTML = `
+          <td>${prov.id}</td>
+          <td>${prov.empresa}</td>
+          <td>${prov.contacto}</td>
+          <td>${prov.telefono}</td>
+          <td>${prov.cuenta}</td>
+          <td><span class="estado-badge ${estadoClass}">${prov.estado}</span></td>
+          <td class="actions-cell">
+            <button class="btn-icon btn-edit" onclick="editarProveedor(${index})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-icon btn-delete" onclick="eliminarProveedor(${index})">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        `;
+        tabla.appendChild(fila);
+      });
+      
+      if (filtered.length === 0) {
+        tabla.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--gray);">No se encontraron proveedores</td></tr>`;
+      }
+    }
+    
+    // Generar reporte (simulado)
+    function generarReporteProveedores() {
+      mostrarNotificacion("Reporte de proveedores generado correctamente", "success");
+    }
+    
+    // Guardar en localStorage
+    function guardarProveedores() {
+      localStorage.setItem('proveedores', JSON.stringify(proveedores));
+    }
+    
+    // Mostrar notificación
+    function mostrarNotificacion(mensaje, tipo) {
+      const notification = document.createElement("div");
+      notification.className = `notification-proveedores notification-${tipo} show`;
+      notification.textContent = mensaje;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.classList.remove("show");
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      }, 3000);
     }
   </script>
 </body>
