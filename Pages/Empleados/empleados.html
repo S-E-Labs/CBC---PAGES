@@ -5,233 +5,1069 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inventario - Empleado</title>
   <link rel="icon" href="../../Assests/Img/favicon.png" type="image/png"/>
-  <link rel="stylesheet" href="../../Assests/Styles/inventario.css" />
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Chart.js para gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-      color: #333;
+    /* Estilos generales */
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2980b9;
+      --danger-color: #e74c3c;
+      --danger-hover: #c0392b;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --light-color: #ecf0f1;
+      --dark-color: #2c3e50;
+      --gray-color: #95a5a6;
+      --white-color: #ffffff;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
     }
 
-    h2, h3 {
-      color: #2c3e50;
-    }
-
-    label {
-      margin-top: 15px;
-      font-weight: bold;
-      display: block;
-    }
-
-    select, input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    * {
       box-sizing: border-box;
-      transition: border 0.3s;
+      margin: 0;
+      padding: 0;
     }
 
-    select:focus, input:focus {
-      border-color: #2980b9;
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Layout del dashboard */
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background-color: var(--dark-color);
+      color: var(--white-color);
+      padding: 20px 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-header h2 {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+
+    .sidebar-header p {
+      color: var(--gray-color);
+      font-size: 0.9rem;
+    }
+
+    .sidebar-menu {
+      margin-top: 20px;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-item i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Contenido principal */
+    .main-content {
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .header-title h1 {
+      font-size: 1.8rem;
+      color: var(--dark-color);
+    }
+
+    .header-title p {
+      color: var(--gray-color);
+      font-size: 0.9rem;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+    .user-details h4 {
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+
+    .user-details p {
+      font-size: 0.8rem;
+      color: var(--gray-color);
+    }
+
+    /* Tarjetas de resumen */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: var(--white-color);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      color: var(--gray-color);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white-color);
+    }
+
+    .card-icon.blue {
+      background-color: var(--primary-color);
+    }
+
+    .card-icon.green {
+      background-color: var(--success-color);
+    }
+
+    .card-icon.orange {
+      background-color: var(--warning-color);
+    }
+
+    .card-icon.red {
+      background-color: var(--danger-color);
+    }
+
+    .card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .card-description {
+      font-size: 0.9rem;
+      color: var(--gray-color);
+    }
+
+    /* Panel de filtros */
+    .filter-panel {
+      background-color: var(--white-color);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--box-shadow);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .filter-group {
+      margin-bottom: 0;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+
+    .filter-group select, 
+    .filter-group input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: 'Roboto', sans-serif;
+      transition: var(--transition);
+    }
+
+    .filter-group select:focus, 
+    .filter-group input:focus {
+      border-color: var(--primary-color);
       outline: none;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* Tabla de productos */
+    .table-container {
+      background-color: var(--white-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      margin-bottom: 30px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: white;
-      margin-top: 20px;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     th, td {
-      border: 1px solid #e0e0e0;
-      padding: 12px;
+      padding: 15px;
       text-align: left;
-      vertical-align: middle;
+      border-bottom: 1px solid #eee;
     }
 
     th {
-      background-color: #3498db;
-      color: white;
-      font-weight: bold;
+      background-color: var(--primary-color);
+      color: var(--white-color);
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-primary {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary-color);
+    }
+
+    .badge-success {
+      background-color: rgba(46, 204, 113, 0.1);
+      color: var(--success-color);
+    }
+
+    .badge-warning {
+      background-color: rgba(243, 156, 18, 0.1);
+      color: var(--warning-color);
+    }
+
+    .badge-danger {
+      background-color: rgba(231, 76, 60, 0.1);
+      color: var(--danger-color);
     }
 
     .comentario-input {
       width: 100%;
-      padding: 6px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-      font-size: 14px;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: 'Roboto', sans-serif;
+      transition: var(--transition);
     }
 
-    .btn-logout {
-      background-color: #e74c3c;
-      color: white;
+    .comentario-input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    .actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .btn {
+      padding: 8px 12px;
       border: none;
-      padding: 10px 15px;
-      margin-top: 15px;
-      border-radius: 6px;
+      border-radius: var(--border-radius);
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
       cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .btn-logout:hover {
-      background-color: #c0392b;
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.8rem;
     }
 
-    #saludoEmpleado {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: #2980b9;
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--white-color);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: var(--white-color);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--danger-hover);
+    }
+
+    .btn i {
+      margin-right: 5px;
+    }
+
+    /* Sección de gráficos */
+    .chart-container {
+      background-color: var(--white-color);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--box-shadow);
+    }
+
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 300px;
+    }
+
+    /* Alertas */
+    .alert-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      transition: var(--transition);
+    }
+
+    .alert-item:hover {
+      background-color: #f9f9f9;
+    }
+
+    .alert-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .alert-icon.warning {
+      background-color: rgba(243, 156, 18, 0.1);
+      color: var(--warning-color);
+    }
+
+    .alert-icon.danger {
+      background-color: rgba(231, 76, 60, 0.1);
+      color: var(--danger-color);
+    }
+
+    .alert-content {
+      flex-grow: 1;
+    }
+
+    .alert-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .alert-description {
+      font-size: 0.9rem;
+      color: var(--gray-color);
+    }
+
+    .alert-time {
+      font-size: 0.8rem;
+      color: var(--gray-color);
+      text-align: right;
+      margin-left: 15px;
+    }
+
+    /* Configuración */
+    .settings-form {
+      background-color: var(--white-color);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--box-shadow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: 'Roboto', sans-serif;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus, 
+    .form-group select:focus, 
+    .form-group textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+
+      .chart-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .user-info {
+        margin-top: 15px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Contenedor principal del dashboard -->
+  <div class="dashboard-container">
+    <!-- Sidebar / Menú lateral -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Inventario App</h2>
+        <p>Panel de empleado</p>
+      </div>
+      
+      <nav class="sidebar-menu">
+        <div class="menu-item active" onclick="mostrarSeccion('inventario')">
+          <i class="fas fa-boxes"></i>
+          <span>Inventario</span>
+        </div>
+        <div class="menu-item" onclick="mostrarSeccion('reportes')">
+          <i class="fas fa-chart-line"></i>
+          <span>Reportes</span>
+        </div>
+        <div class="menu-item" onclick="mostrarSeccion('alertas')">
+          <i class="fas fa-bell"></i>
+          <span>Alertas</span>
+        </div>
+        <div class="menu-item" onclick="mostrarSeccion('configuracion')">
+          <i class="fas fa-cog"></i>
+          <span>Configuración</span>
+        </div>
+        <div class="menu-item" onclick="cerrarSesion()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </div>
+      </nav>
+    </aside>
 
-  <h2>Panel de Inventario - Empleado</h2>
+    <!-- Contenido principal -->
+    <main class="main-content">
+      <!-- Sección de Inventario (visible por defecto) -->
+      <section id="inventario-section">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-title">
+            <h1>Gestión de Inventario</h1>
+            <p id="saludoEmpleado">Bienvenido de nuevo</p>
+          </div>
+          
+          <div class="user-info">
+            <img src="https://ui-avatars.com/api/?name=Usuario+Empleado&background=3498db&color=fff" alt="Usuario">
+            <div class="user-details">
+              <h4 id="nombreUsuario">Usuario Empleado</h4>
+              <p>Rol: <span id="rolUsuario">Empleado</span></p>
+            </div>
+          </div>
+        </header>
 
-  <div id="saludoEmpleado"></div>
+        <!-- Tarjetas de resumen -->
+        <section class="summary-cards">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Productos totales</h3>
+              <div class="card-icon blue">
+                <i class="fas fa-boxes"></i>
+              </div>
+            </div>
+            <h2 class="card-value" id="totalProductos">0</h2>
+            <p class="card-description">En todas las categorías</p>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Stock bajo</h3>
+              <div class="card-icon orange">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+            </div>
+            <h2 class="card-value" id="stockBajo">0</h2>
+            <p class="card-description">Productos con menos de 10 unidades</p>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Categorías</h3>
+              <div class="card-icon green">
+                <i class="fas fa-tags"></i>
+              </div>
+            </div>
+            <h2 class="card-value" id="totalCategorias">5</h2>
+            <p class="card-description">Diferentes categorías</p>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Comentarios</h3>
+              <div class="card-icon red">
+                <i class="fas fa-comment-alt"></i>
+              </div>
+            </div>
+            <h2 class="card-value" id="totalComentarios">0</h2>
+            <p class="card-description">Comentarios agregados</p>
+          </div>
+        </section>
 
-  <label for="categoria">Selecciona Categoría:</label>
-  <select id="categoria" onchange="mostrarProductos()">
-    <option value="">-- Todas las Categorías --</option>
-    <option value="lavamanos">Lavamanos</option>
-    <option value="muebles">Muebles</option>
-    <option value="sanitarios">Sanitarios</option>
-    <option value="grifos">Grifos</option>
-    <option value="accesorios">Accesorios</option>
-  </select>
+        <!-- Panel de filtros -->
+        <section class="filter-panel">
+          <h3>Filtrar productos</h3>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="categoria">Categoría</label>
+              <select id="categoria" onchange="filtrarProductos()">
+                <option value="">Todas las categorías</option>
+                <option value="lavamanos">Lavamanos</option>
+                <option value="muebles">Muebles</option>
+                <option value="sanitarios">Sanitarios</option>
+                <option value="grifos">Grifos</option>
+                <option value="accesorios">Accesorios</option>
+              </select>
+            </div>
+            
+            <div class="filter-group">
+              <label for="buscar">Buscar producto</label>
+              <input 
+                type="text" 
+                id="buscar" 
+                oninput="filtrarProductos()" 
+                placeholder="Buscar por nombre o código..."
+              >
+            </div>
+            
+            <div class="filter-group">
+              <label for="stock">Estado de stock</label>
+              <select id="stock" onchange="filtrarProductos()">
+                <option value="">Todos</option>
+                <option value="bajo">Stock bajo (<10)</option>
+                <option value="medio">Stock medio (10-50)</option>
+                <option value="alto">Stock alto (>50)</option>
+              </select>
+            </div>
+          </div>
+        </section>
 
-  <label for="buscar">Buscar Producto:</label>
-  <input type="text" id="buscar" oninput="filtrarProductos()" placeholder="Buscar por nombre..." />
+        <!-- Tabla de productos -->
+        <section class="table-container">
+          <table id="tablaProductos">
+            <thead>
+              <tr>
+                <th>Categoría</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Estado</th>
+                <th>Comentarios</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+      </section>
 
-  <h3>Inventario</h3>
-  <table id="tablaProductos">
-    <thead>
-      <tr>
-        <th>Categoría</th>
-        <th>Código</th>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
-        <th>Comentarios</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+      <!-- Sección de Reportes (oculta por defecto) -->
+      <section id="reportes-section" style="display: none;">
+        <header class="header">
+          <div class="header-title">
+            <h1>Reportes y Análisis</h1>
+            <p>Visualización de datos del inventario</p>
+          </div>
+        </header>
 
-  <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+        <div class="chart-container">
+          <h3>Distribución por categorías</h3>
+          <div class="chart-row">
+            <div class="chart-wrapper">
+              <canvas id="categoriasChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="stockChart"></canvas>
+            </div>
+          </div>
+          
+          <h3>Productos con stock bajo</h3>
+          <div class="chart-wrapper" style="height: 400px;">
+            <canvas id="stockBajoChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección de Alertas (oculta por defecto) -->
+      <section id="alertas-section" style="display: none;">
+        <header class="header">
+          <div class="header-title">
+            <h1>Alertas y Notificaciones</h1>
+            <p>Productos que requieren atención</p>
+          </div>
+          <div class="user-info">
+            <button class="btn btn-primary" onclick="marcarTodasComoLeidas()">
+              <i class="fas fa-check-circle"></i> Marcar todas como leídas
+            </button>
+          </div>
+        </header>
+
+        <div class="table-container">
+          <h3>Alertas recientes</h3>
+          <div id="listaAlertas">
+            <!-- Las alertas se generarán dinámicamente con JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección de Configuración (oculta por defecto) -->
+      <section id="configuracion-section" style="display: none;">
+        <header class="header">
+          <div class="header-title">
+            <h1>Configuración</h1>
+            <p>Personaliza tu experiencia</p>
+          </div>
+        </header>
+
+        <div class="settings-form">
+          <h3>Preferencias de usuario</h3>
+          
+          <div class="form-group">
+            <label for="nombreCompleto">Nombre completo</label>
+            <input type="text" id="nombreCompleto" placeholder="Ingresa tu nombre completo">
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" placeholder="Ingresa tu correo electrónico">
+          </div>
+          
+          <div class="form-group">
+            <label for="notificaciones">Recibir notificaciones</label>
+            <select id="notificaciones">
+              <option value="si">Sí, recibir notificaciones</option>
+              <option value="no">No recibir notificaciones</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="tema">Tema de la interfaz</label>
+            <select id="tema">
+              <option value="claro">Tema claro</option>
+              <option value="oscuro">Tema oscuro</option>
+              <option value="sistema">Usar configuración del sistema</option>
+            </select>
+          </div>
+          
+          <h3 style="margin-top: 30px;">Configuración de alertas</h3>
+          
+          <div class="form-group">
+            <label for="umbralStock">Umbral para stock bajo</label>
+            <input type="number" id="umbralStock" min="1" value="10">
+            <small>Número mínimo de unidades para considerar stock bajo</small>
+          </div>
+          
+          <div class="form-group">
+            <label>Tipos de alertas</label>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+              <label style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="alertasStock" checked>
+                <span>Alertas por stock bajo</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="alertasVencimiento" checked>
+                <span>Alertas por próximos vencimientos</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="alertasMovimiento">
+                <span>Alertas por movimientos importantes</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button class="btn" onclick="resetearConfiguracion()">
+              <i class="fas fa-undo"></i> Restablecer
+            </button>
+            <button class="btn btn-primary" onclick="guardarConfiguracion()">
+              <i class="fas fa-save"></i> Guardar cambios
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script>
+    // Constantes y variables globales
     const categorias = ["lavamanos", "muebles", "sanitarios", "grifos", "accesorios"];
+    let productosGlobales = []; // Almacena todos los productos para filtrado
+    let alertasGlobales = []; // Almacena todas las alertas
+    let configuracionUsuario = {}; // Almacena la configuración del usuario
 
-    // Al cargar la página
-    window.addEventListener('load', () => {
+    // Función que se ejecuta al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      // Verificar autenticación
+      verificarAutenticacion();
+      
+      // Cargar datos del usuario
+      cargarDatosUsuario();
+      
+      // Cargar productos
+      cargarProductos();
+      
+      // Cargar alertas
+      cargarAlertas();
+      
+      // Cargar configuración
+      cargarConfiguracion();
+      
+      // Mostrar sección de inventario por defecto
+      mostrarSeccion('inventario');
+    });
+
+    /**
+     * Verifica si el usuario está autenticado y tiene el rol correcto
+     */
+    function verificarAutenticacion() {
       const usuario = sessionStorage.getItem('usuario');
       const rol = sessionStorage.getItem('rol');
 
       if (!usuario || rol !== 'empleado') {
         window.location.href = "../../../Pages/index.html";
-      } else {
-        mostrarSaludo(usuario);
-        mostrarProductos();
       }
-    });
-
-    function mostrarSaludo(usuario) {
-      const saludoDiv = document.getElementById('saludoEmpleado');
-      saludoDiv.textContent = `¡Bienvenido, ${usuario}!`;
     }
 
-    function obtenerCategoria() {
-      return document.getElementById("categoria").value.toLowerCase();
+    /**
+     * Carga y muestra los datos del usuario en el header
+     */
+    function cargarDatosUsuario() {
+      const usuario = sessionStorage.getItem('usuario');
+      const rol = sessionStorage.getItem('rol');
+      
+      document.getElementById('nombreUsuario').textContent = usuario;
+      document.getElementById('rolUsuario').textContent = rol;
+      document.getElementById('saludoEmpleado').textContent = `Bienvenido, ${usuario}`;
+      
+      // Prellenar configuración con datos del usuario
+      document.getElementById('nombreCompleto').value = usuario;
+      document.getElementById('email').value = `${usuario.toLowerCase().replace(/\s+/g, '.')}@empresa.com`;
     }
 
-    function mostrarProductos(filtrados = null) {
+    /**
+     * Carga todos los productos desde localStorage
+     */
+    function cargarProductos() {
+      productosGlobales = [];
+      
+      for (let categoria of categorias) {
+        const productos = JSON.parse(localStorage.getItem(categoria)) || [];
+        // Agregar datos de ejemplo si no hay productos
+        if (productos.length === 0 && categoria === "lavamanos") {
+          const productosEjemplo = [
+            { codigo: "LV-001", nombre: "Lavamanos de porcelana", precio: 125.99, cantidad: 8 },
+            { codigo: "LV-002", nombre: "Lavamanos moderno", precio: 89.50, cantidad: 15 },
+            { codigo: "LV-003", nombre: "Lavamanos clásico", precio: 145.75, cantidad: 3 }
+          ];
+          localStorage.setItem(categoria, JSON.stringify(productosEjemplo));
+          productosGlobales = productosGlobales.concat(
+            productosEjemplo.map(p => ({ ...p, categoria }))
+          );
+        } else {
+          productosGlobales = productosGlobales.concat(
+            productos.map(p => ({ ...p, categoria }))
+          );
+        }
+      }
+      
+      actualizarEstadisticas();
+    }
+
+    /**
+     * Carga las alertas desde localStorage o genera algunas de ejemplo
+     */
+    function cargarAlertas() {
+      alertasGlobales = JSON.parse(localStorage.getItem('alertas')) || [];
+      
+      // Si no hay alertas, generamos algunas de ejemplo
+      if (alertasGlobales.length === 0) {
+        const productosConStockBajo = productosGlobales.filter(p => p.cantidad < 10);
+        
+        productosConStockBajo.forEach(prod => {
+          alertasGlobales.push({
+            id: Date.now() + Math.random(),
+            tipo: 'stock',
+            titulo: `Stock bajo en ${prod.nombre}`,
+            descripcion: `Solo quedan ${prod.cantidad} unidades de ${prod.nombre} (${prod.codigo}).`,
+            categoria: prod.categoria,
+            codigoProducto: prod.codigo,
+            fecha: new Date().toISOString(),
+            leida: false,
+            urgente: prod.cantidad < 5
+          });
+        });
+        
+        // Agregar algunas alertas adicionales
+        alertasGlobales.push(
+          {
+            id: Date.now() + Math.random(),
+            tipo: 'vencimiento',
+            titulo: 'Productos próximos a vencer',
+            descripcion: '3 productos de la categoría sanitarios están próximos a vencer.',
+            categoria: 'sanitarios',
+            fecha: new Date(Date.now() - 86400000).toISOString(), // Ayer
+            leida: false,
+            urgente: true
+          },
+          {
+            id: Date.now() + Math.random(),
+            tipo: 'movimiento',
+            titulo: 'Movimiento inusual de inventario',
+            descripcion: 'Se registró una salida inusual de 25 unidades de grifos modelo GF-205.',
+            categoria: 'grifos',
+            codigoProducto: 'GF-205',
+            fecha: new Date(Date.now() - 172800000).toISOString(), // Hace 2 días
+            leida: true,
+            urgente: false
+          }
+        );
+        
+        localStorage.setItem('alertas', JSON.stringify(alertasGlobales));
+      }
+    }
+
+    /**
+     * Carga la configuración del usuario desde localStorage
+     */
+    function cargarConfiguracion() {
+      configuracionUsuario = JSON.parse(localStorage.getItem('configuracionUsuario')) || {
+        notificaciones: 'si',
+        tema: 'claro',
+        umbralStock: 10,
+        alertasStock: true,
+        alertasVencimiento: true,
+        alertasMovimiento: false
+      };
+      
+      // Aplicar configuración a los controles del formulario
+      document.getElementById('notificaciones').value = configuracionUsuario.notificaciones;
+      document.getElementById('tema').value = configuracionUsuario.tema;
+      document.getElementById('umbralStock').value = configuracionUsuario.umbralStock;
+      document.getElementById('alertasStock').checked = configuracionUsuario.alertasStock;
+      document.getElementById('alertasVencimiento').checked = configuracionUsuario.alertasVencimiento;
+      document.getElementById('alertasMovimiento').checked = configuracionUsuario.alertasMovimiento;
+      
+      // Aplicar tema seleccionado
+      aplicarTema(configuracionUsuario.tema);
+    }
+
+    /**
+     * Aplica el tema seleccionado a la interfaz
+     * @param {String} tema - Tema a aplicar ('claro', 'oscuro' o 'sistema')
+     */
+    function aplicarTema(tema) {
+      // En una implementación real, aquí cambiarías las variables CSS
+      console.log(`Aplicando tema: ${tema}`);
+    }
+
+    /**
+     * Muestra la sección seleccionada y oculta las demás
+     * @param {String} seccion - ID de la sección a mostrar ('inventario', 'reportes', 'alertas' o 'configuracion')
+     */
+    function mostrarSeccion(seccion) {
+      // Ocultar todas las secciones
+      document.getElementById('inventario-section').style.display = 'none';
+      document.getElementById('reportes-section').style.display = 'none';
+      document.getElementById('alertas-section').style.display = 'none';
+      document.getElementById('configuracion-section').style.display = 'none';
+      
+      // Mostrar la sección seleccionada
+      document.getElementById(`${seccion}-section`).style.display = 'block';
+      
+      // Actualizar el menú activo
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Buscar el ítem del menú que coincide con la sección
+      const menuItems = document.querySelectorAll('.menu-item');
+      for (let item of menuItems) {
+        if (item.getAttribute('onclick').includes(seccion)) {
+          item.classList.add('active');
+          break;
+        }
+      }
+      
+      // Si es la sección de reportes, generar los gráficos
+      if (seccion === 'reportes') {
+        generarGraficos();
+      }
+      
+      // Si es la sección de alertas, cargar la lista de alertas
+      if (seccion === 'alertas') {
+        mostrarAlertas();
+      }
+    }
+
+    /**
+     * Muestra los productos en la tabla, opcionalmente filtrados
+     * @param {Array} [productosFiltrados] - Productos filtrados a mostrar
+     */
+    function mostrarProductos(productosFiltrados = null) {
       const tbody = document.querySelector("#tablaProductos tbody");
       tbody.innerHTML = "";
 
-      let productosAMostrar = [];
+      const productosAMostrar = productosFiltrados || productosGlobales;
 
-      if (filtrados) {
-        productosAMostrar = filtrados;
-      } else {
-        const categoria = obtenerCategoria();
-        if (categoria) {
-          productosAMostrar = JSON.parse(localStorage.getItem(categoria)) || [];
-          productosAMostrar = productosAMostrar.map(p => ({ ...p, categoria }));
-        } else {
-          // Mostrar todo inventario
-          productosAMostrar = [];
-          for (let cat of categorias) {
-            let prods = JSON.parse(localStorage.getItem(cat)) || [];
-            prods = prods.map(p => ({ ...p, categoria: cat }));
-            productosAMostrar = productosAMostrar.concat(prods);
-          }
-        }
+      if (productosAMostrar.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 30px;">
+              No se encontraron productos. Prueba con otros filtros.
+            </td>
+          </tr>
+        `;
+        return;
       }
 
       productosAMostrar.forEach((prod) => {
         const tr = document.createElement("tr");
-
+        
+        // Determinar estado del stock
+        let estado = "";
+        let badgeClass = "";
+        if (prod.cantidad < 10) {
+          estado = "Bajo";
+          badgeClass = "badge-danger";
+        } else if (prod.cantidad < 50) {
+          estado = "Medio";
+          badgeClass = "badge-warning";
+        } else {
+          estado = "Alto";
+          badgeClass = "badge-success";
+        }
+        
         // Obtener comentario guardado
         const comentarioKey = `comentario_${prod.categoria}_${prod.codigo}`;
         const comentarioGuardado = localStorage.getItem(comentarioKey) || "";
 
         tr.innerHTML = `
-          <td>${prod.categoria}</td>
+          <td><span class="badge badge-primary">${prod.categoria}</span></td>
           <td>${prod.codigo}</td>
           <td>${prod.nombre}</td>
-          <td>${prod.precio}</td>
+          <td>$${parseFloat(prod.precio).toFixed(2)}</td>
           <td>${prod.cantidad}</td>
-          <td>
-            <input 
-              type="text" 
-              class="comentario-input" 
-              value="${comentarioGuardado.replace(/"/g, '&quot;')}" 
-              placeholder="Agregar comentario..." 
-              oninput="guardarComentario('${prod.categoria}', '${prod.codigo}', this.value)"
-            />
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function guardarComentario(categoria, codigo, texto) {
-      const key = `comentario_${categoria}_${codigo}`;
-      localStorage.setItem(key, texto);
-    }
-
-    function filtrarProductos() {
-      const texto = document.getElementById("buscar").value.toLowerCase();
-
-      let todosLosProductos = [];
-      for (let cat of categorias) {
-        let productos = JSON.parse(localStorage.getItem(cat)) || [];
-        productos = productos.map(p => ({ ...p, categoria: cat }));
-        todosLosProductos = todosLosProductos.concat(productos);
-      }
-
-      const filtrados = todosLosProductos.filter(p => p.nombre.toLowerCase().includes(texto));
-
-      mostrarProductos(filtrados);
-    }
-
-    function cerrarSesion() {
-      sessionStorage.clear();
-      window.location.href = "../../Pages/index.html";
-    }
-  </script>
-</body>
-</html>
+         
