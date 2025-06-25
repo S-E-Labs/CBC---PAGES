@@ -5,90 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inventario - Empleado</title>
   <link rel="icon" href="../../Assests/Img/favicon.png" type="image/png"/>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
   <!-- Font Awesome para íconos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
   <!-- Chart.js para gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* Estilos generales */
-    :root {
-      --primary-color: #3498db;
-      --secondary-color: #2980b9;
-      --danger-color: #e74c3c;
-      --danger-hover: #c0392b;
-      --success-color: #2ecc71;
-      --warning-color: #f39c12;
-      --light-color: #ecf0f1;
-      --dark-color: #2c3e50;
-      --gray-color: #95a5a6;
-      --white-color: #ffffff;
-      --border-radius: 8px;
-      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s ease;
-    }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+  <style>
+    /* Estilos personalizados y variables */
+    :root {
+      --primary-color: #0d6efd; /* Color primario de Bootstrap */
+      --secondary-color: #6c757d; /* Color secundario de Bootstrap */
+      --success-color: #198754; /* Color success de Bootstrap */
+      --danger-color: #dc3545; /* Color danger de Bootstrap */
+      --warning-color: #ffc107; /* Color warning de Bootstrap */
+      --info-color: #0dcaf0; /* Color info de Bootstrap */
+      --light-color: #f8f9fa; /* Color light de Bootstrap */
+      --dark-color: #212529; /* Color dark de Bootstrap */
+      --white-color: #ffffff;
+
+      --body-bg: #f5f7fa;
+      --sidebar-bg: var(--dark-color);
+      --sidebar-color: var(--white-color);
+      --card-bg: var(--white-color);
+      --table-header-bg: var(--primary-color);
+      --table-header-color: var(--white-color);
+
+      --border-radius: 0.375rem; /* radio de borde de Bootstrap */
+      --box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); /* sombra de Bootstrap */
+      --transition: all 0.3s ease;
     }
 
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #f5f7fa;
+      background-color: var(--body-bg);
       color: #333;
       line-height: 1.6;
     }
 
-    /* Layout del dashboard */
+    /* Layout del dashboard usando flexbox para mayor flexibilidad con Bootstrap */
     .dashboard-container {
-      display: grid;
-      grid-template-columns: 250px 1fr;
+      display: flex;
       min-height: 100vh;
     }
 
     /* Sidebar */
     .sidebar {
-      background-color: var(--dark-color);
-      color: var(--white-color);
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      color: var(--sidebar-color);
       padding: 20px 0;
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0; /* Evita que el sidebar se encoja */
     }
 
     .sidebar-header {
       padding: 0 20px 20px;
+      margin-bottom: 20px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .sidebar-header h2 {
       font-size: 1.5rem;
       margin-bottom: 5px;
+      color: var(--white-color);
     }
 
     .sidebar-header p {
-      color: var(--gray-color);
+      color: var(--secondary-color); /* Usando el color secundario de Bootstrap */
       font-size: 0.9rem;
     }
 
-    .sidebar-menu {
-      margin-top: 20px;
-    }
-
-    .menu-item {
+    .sidebar-menu .menu-item {
       padding: 12px 20px;
       display: flex;
       align-items: center;
+      color: rgba(255, 255, 255, 0.7); /* Color de texto por defecto */
       cursor: pointer;
       transition: var(--transition);
+      text-decoration: none; /* Elimina el subrayado si son links */
     }
 
-    .menu-item:hover, .menu-item.active {
+    .sidebar-menu .menu-item:hover, .sidebar-menu .menu-item.active {
       background-color: rgba(255, 255, 255, 0.1);
+      color: var(--white-color); /* Color de texto al pasar el ratón o activo */
     }
 
-    .menu-item i {
+    .sidebar-menu .menu-item i {
       margin-right: 10px;
       width: 20px;
       text-align: center;
@@ -96,11 +106,12 @@
 
     /* Contenido principal */
     .main-content {
+      flex-grow: 1; /* Permite que el contenido principal ocupe el espacio restante */
       padding: 20px;
       overflow-y: auto;
     }
 
-    /* Header */
+    /* Header - Usando clases de Bootstrap para layout y espaciado */
     .header {
       display: flex;
       justify-content: space-between;
@@ -116,7 +127,7 @@
     }
 
     .header-title p {
-      color: var(--gray-color);
+      color: var(--secondary-color); /* Usar color secundario de Bootstrap */
       font-size: 0.9rem;
     }
 
@@ -140,26 +151,19 @@
 
     .user-details p {
       font-size: 0.8rem;
-      color: var(--gray-color);
+      color: var(--secondary-color);
     }
 
-    /* Tarjetas de resumen */
-    .summary-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
+    /* Tarjetas de resumen - Usando grid de Bootstrap */
+    /* Las clases de Bootstrap como .row, .col-md-6, .col-lg-3 manejan el layout */
+    .summary-cards .card {
+       border: none; /* Eliminar borde por defecto de Bootstrap */
+       border-radius: var(--border-radius);
+       box-shadow: var(--box-shadow);
+       transition: var(--transition);
     }
 
-    .card {
-      background-color: var(--white-color);
-      border-radius: var(--border-radius);
-      padding: 20px;
-      box-shadow: var(--box-shadow);
-      transition: var(--transition);
-    }
-
-    .card:hover {
+    .summary-cards .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
@@ -169,11 +173,14 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
+      background-color: transparent; /* Eliminar fondo de header de Bootstrap */
+      border-bottom: none; /* Eliminar borde de header de Bootstrap */
     }
 
     .card-title {
       font-size: 1rem;
-      color: var(--gray-color);
+      color: var(--secondary-color);
+      margin-bottom: 0; /* Ajuste de Bootstrap */
     }
 
     .card-icon {
@@ -184,38 +191,29 @@
       align-items: center;
       justify-content: center;
       color: var(--white-color);
+      font-size: 1.2rem; /* Aumentar tamaño del icono */
     }
 
-    .card-icon.blue {
-      background-color: var(--primary-color);
-    }
-
-    .card-icon.green {
-      background-color: var(--success-color);
-    }
-
-    .card-icon.orange {
-      background-color: var(--warning-color);
-    }
-
-    .card-icon.red {
-      background-color: var(--danger-color);
-    }
+    .card-icon.blue { background-color: var(--primary-color); }
+    .card-icon.green { background-color: var(--success-color); }
+    .card-icon.orange { background-color: var(--warning-color); }
+    .card-icon.red { background-color: var(--danger-color); }
 
     .card-value {
       font-size: 1.8rem;
       font-weight: 700;
       margin-bottom: 5px;
+      color: var(--dark-color);
     }
 
     .card-description {
       font-size: 0.9rem;
-      color: var(--gray-color);
+      color: var(--secondary-color);
     }
 
-    /* Panel de filtros */
+    /* Panel de filtros - Usando clases de Bootstrap */
     .filter-panel {
-      background-color: var(--white-color);
+      background-color: var(--card-bg);
       border-radius: var(--border-radius);
       padding: 20px;
       margin-bottom: 30px;
@@ -226,11 +224,6 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .filter-group {
-      margin-bottom: 0;
     }
 
     .filter-group label {
@@ -240,84 +233,66 @@
       color: var(--dark-color);
     }
 
-    .filter-group select, 
+    /* Bootstrap styles for form controls are used here */
+    .filter-group select,
     .filter-group input {
-      width: 100%;
-      padding: 10px 15px;
-      border: 1px solid #ddd;
-      border-radius: var(--border-radius);
+      /* Bootstrap provides padding, border, border-radius */
       font-family: 'Roboto', sans-serif;
       transition: var(--transition);
     }
 
-    .filter-group select:focus, 
-    .filter-group input:focus {
-      border-color: var(--primary-color);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    /* Focus styles improved with Bootstrap classes or custom CSS */
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Bootstrap focus shadow */
     }
 
-    /* Tabla de productos */
+
+    /* Tabla de productos - Usando clases de Bootstrap */
     .table-container {
-      background-color: var(--white-color);
+      background-color: var(--card-bg);
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
-      overflow: hidden;
+      overflow: hidden; /* Para que los bordes redondeados se apliquen bien */
       margin-bottom: 30px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .table { /* Using Bootstrap's .table class */
+      margin-bottom: 0; /* Eliminar margen inferior de Bootstrap */
     }
 
-    th, td {
-      padding: 15px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-
-    th {
-      background-color: var(--primary-color);
-      color: var(--white-color);
+    .table th {
+      background-color: var(--table-header-bg);
+      color: var(--table-header-color);
       font-weight: 500;
       text-transform: uppercase;
       font-size: 0.8rem;
       letter-spacing: 0.5px;
+      border-bottom: none; /* Eliminar borde inferior de thead */
     }
 
-    tr:hover {
-      background-color: #f9f9f9;
+    .table td {
+        vertical-align: middle; /* Alinear contenido verticalmente */
     }
 
+    /* Using Bootstrap's .table-hover class */
+    .table-hover tbody tr:hover {
+      background-color: #f2f2f2; /* Color de hover ligeramente diferente */
+    }
+
+    /* Badges - Using Bootstrap's .badge class */
     .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 20px;
+      padding: 0.35em 0.65em; /* Ajuste de padding de Bootstrap */
+      border-radius: 0.25rem; /* Ajuste de border-radius de Bootstrap */
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
     }
 
-    .badge-primary {
-      background-color: rgba(52, 152, 219, 0.1);
-      color: var(--primary-color);
-    }
-
-    .badge-success {
-      background-color: rgba(46, 204, 113, 0.1);
-      color: var(--success-color);
-    }
-
-    .badge-warning {
-      background-color: rgba(243, 156, 18, 0.1);
-      color: var(--warning-color);
-    }
-
-    .badge-danger {
-      background-color: rgba(231, 76, 60, 0.1);
-      color: var(--danger-color);
-    }
+    .badge-primary { background-color: rgba(13, 110, 253, 0.1); color: var(--primary-color); }
+    .badge-success { background-color: rgba(25, 135, 84, 0.1); color: var(--success-color); }
+    .badge-warning { background-color: rgba(255, 193, 7, 0.1); color: var(--warning-color); }
+    .badge-danger { background-color: rgba(220, 53, 69, 0.1); color: var(--danger-color); }
 
     .comentario-input {
       width: 100%;
@@ -326,11 +301,13 @@
       border-radius: var(--border-radius);
       font-family: 'Roboto', sans-serif;
       transition: var(--transition);
+      font-size: 0.9rem;
     }
 
     .comentario-input:focus {
       border-color: var(--primary-color);
       outline: none;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Bootstrap focus shadow */
     }
 
     .actions {
@@ -338,10 +315,9 @@
       gap: 5px;
     }
 
+    /* Buttons - Using Bootstrap's .btn classes */
     .btn {
-      padding: 8px 12px;
-      border: none;
-      border-radius: var(--border-radius);
+      /* Bootstrap provides padding, border, border-radius, font-size, etc. */
       font-family: 'Roboto', sans-serif;
       font-weight: 500;
       cursor: pointer;
@@ -352,27 +328,14 @@
     }
 
     .btn-sm {
-      padding: 5px 10px;
-      font-size: 0.8rem;
+      /* Bootstrap's .btn-sm class is used */
     }
 
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: var(--white-color);
-    }
+    .btn-primary { /* Bootstrap's .btn-primary */ }
+    .btn-primary:hover { /* Bootstrap handles hover state */ }
 
-    .btn-primary:hover {
-      background-color: var(--secondary-color);
-    }
-
-    .btn-danger {
-      background-color: var(--danger-color);
-      color: var(--white-color);
-    }
-
-    .btn-danger:hover {
-      background-color: var(--danger-hover);
-    }
+    .btn-danger { /* Bootstrap's .btn-danger */ }
+    .btn-danger:hover { /* Bootstrap handles hover state */ }
 
     .btn i {
       margin-right: 5px;
@@ -380,7 +343,7 @@
 
     /* Sección de gráficos */
     .chart-container {
-      background-color: var(--white-color);
+      background-color: var(--card-bg);
       border-radius: var(--border-radius);
       padding: 20px;
       margin-bottom: 30px;
@@ -397,6 +360,8 @@
     .chart-wrapper {
       position: relative;
       height: 300px;
+      /* Add padding to chart wrapper to prevent labels being cut off */
+      padding: 10px;
     }
 
     /* Alertas */
@@ -406,6 +371,7 @@
       padding: 15px;
       border-bottom: 1px solid #eee;
       transition: var(--transition);
+      cursor: pointer; /* Indicar que es clickeable */
     }
 
     .alert-item:hover {
@@ -421,16 +387,20 @@
       justify-content: center;
       margin-right: 15px;
       flex-shrink: 0;
+      font-size: 1.2rem;
     }
 
     .alert-icon.warning {
       background-color: rgba(243, 156, 18, 0.1);
       color: var(--warning-color);
     }
-
     .alert-icon.danger {
       background-color: rgba(231, 76, 60, 0.1);
       color: var(--danger-color);
+    }
+    .alert-icon.primary { /* New color for movement alerts */
+        background-color: rgba(13, 110, 253, 0.1);
+        color: var(--primary-color);
     }
 
     .alert-content {
@@ -440,23 +410,25 @@
     .alert-title {
       font-weight: 500;
       margin-bottom: 5px;
+      color: var(--dark-color);
     }
 
     .alert-description {
       font-size: 0.9rem;
-      color: var(--gray-color);
+      color: var(--secondary-color);
     }
 
     .alert-time {
       font-size: 0.8rem;
-      color: var(--gray-color);
+      color: var(--secondary-color);
       text-align: right;
       margin-left: 15px;
+      flex-shrink: 0;
     }
 
-    /* Configuración */
+    /* Configuración - Usando clases de Bootstrap */
     .settings-form {
-      background-color: var(--white-color);
+      background-color: var(--card-bg);
       border-radius: var(--border-radius);
       padding: 20px;
       box-shadow: var(--box-shadow);
@@ -470,25 +442,21 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
+      color: var(--dark-color);
     }
 
-    .form-group input, 
-    .form-group select, 
+    /* Bootstrap's .form-control is used */
+    .form-group input,
+    .form-group select,
     .form-group textarea {
-      width: 100%;
-      padding: 10px 15px;
-      border: 1px solid #ddd;
-      border-radius: var(--border-radius);
-      font-family: 'Roboto', sans-serif;
-      transition: var(--transition);
+       /* Bootstrap provides styling */
+       font-family: 'Roboto', sans-serif;
+       transition: var(--transition);
     }
 
-    .form-group input:focus, 
-    .form-group select:focus, 
-    .form-group textarea:focus {
-      border-color: var(--primary-color);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    .form-group input[type="checkbox"] {
+        width: auto; /* Allow checkbox to be auto width */
+        margin-right: 5px;
     }
 
     .form-actions {
@@ -501,15 +469,47 @@
     /* Responsive */
     @media (max-width: 992px) {
       .dashboard-container {
-        grid-template-columns: 1fr;
+        flex-direction: column; /* Apilar sidebar y contenido */
       }
-      
+
       .sidebar {
-        display: none;
+        width: 100%; /* Ancho completo */
+        height: auto; /* Altura automática */
+        padding: 10px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar-header {
+          padding: 10px 20px;
+          margin-bottom: 10px;
+          border-bottom: none;
+      }
+       .sidebar-header h2, .sidebar-header p {
+           text-align: center;
+       }
+
+      .sidebar-menu {
+        display: flex; /* Mostrar items en fila */
+        justify-content: space-around; /* Espaciar items */
+        margin-top: 0;
+      }
+
+      .sidebar-menu .menu-item {
+          padding: 8px 15px;
+          flex-direction: column; /* Apilar icono y texto */
+          font-size: 0.8rem;
+      }
+      .sidebar-menu .menu-item i {
+          margin-right: 0;
+          margin-bottom: 5px;
+      }
+
+      .main-content {
+          padding: 15px; /* Reducir padding */
       }
 
       .chart-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Una columna */
       }
     }
 
@@ -518,9 +518,23 @@
         flex-direction: column;
         align-items: flex-start;
       }
-      
+
       .user-info {
         margin-top: 15px;
+        width: 100%; /* Ocupar todo el ancho */
+        justify-content: flex-end; /* Alinear a la derecha si es posible */
+      }
+
+      .summary-cards {
+          grid-template-columns: 1fr; /* Apilar tarjetas */
+      }
+
+       .filter-row {
+          grid-template-columns: 1fr; /* Apilar filtros */
+      }
+
+      .table-responsive { /* Bootstrap class for responsive tables */
+          overflow-x: auto;
       }
     }
   </style>
@@ -534,28 +548,28 @@
         <h2>Inventario App</h2>
         <p>Panel de empleado</p>
       </div>
-      
+
       <nav class="sidebar-menu">
-        <div class="menu-item active" onclick="mostrarSeccion('inventario')">
+        <a href="#" class="menu-item active" onclick="mostrarSeccion('inventario', event)">
           <i class="fas fa-boxes"></i>
           <span>Inventario</span>
-        </div>
-        <div class="menu-item" onclick="mostrarSeccion('reportes')">
+        </a>
+        <a href="#" class="menu-item" onclick="mostrarSeccion('reportes', event)">
           <i class="fas fa-chart-line"></i>
           <span>Reportes</span>
-        </div>
-        <div class="menu-item" onclick="mostrarSeccion('alertas')">
+        </a>
+        <a href="#" class="menu-item" onclick="mostrarSeccion('alertas', event)">
           <i class="fas fa-bell"></i>
           <span>Alertas</span>
-        </div>
-        <div class="menu-item" onclick="mostrarSeccion('configuracion')">
+        </a>
+        <a href="#" class="menu-item" onclick="mostrarSeccion('configuracion', event)">
           <i class="fas fa-cog"></i>
           <span>Configuración</span>
-        </div>
-        <div class="menu-item" onclick="cerrarSesion()">
+        </a>
+        <a href="#" class="menu-item" onclick="cerrarSesion(event)">
           <i class="fas fa-sign-out-alt"></i>
           <span>Cerrar Sesión</span>
-        </div>
+        </a>
       </nav>
     </aside>
 
@@ -569,9 +583,9 @@
             <h1>Gestión de Inventario</h1>
             <p id="saludoEmpleado">Bienvenido de nuevo</p>
           </div>
-          
+
           <div class="user-info">
-            <img src="https://ui-avatars.com/api/?name=Usuario+Empleado&background=3498db&color=fff" alt="Usuario">
+            <img src="https://ui-avatars.com/api/?name=Usuario+Empleado&background=0d6efd&color=fff" alt="Usuario">
             <div class="user-details">
               <h4 id="nombreUsuario">Usuario Empleado</h4>
               <p>Rol: <span id="rolUsuario">Empleado</span></p>
@@ -579,108 +593,133 @@
           </div>
         </header>
 
-        <!-- Tarjetas de resumen -->
-        <section class="summary-cards">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Productos totales</h3>
-              <div class="card-icon blue">
-                <i class="fas fa-boxes"></i>
+        <!-- Tarjetas de resumen - Usando grid de Bootstrap -->
+        <section class="row summary-cards">
+          <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-header">
+                  <h3 class="card-title">Productos totales</h3>
+                  <div class="card-icon blue">
+                    <i class="fas fa-boxes"></i>
+                  </div>
+                </div>
+                <h2 class="card-value" id="totalProductos">0</h2>
+                <p class="card-description">En todas las categorías</p>
               </div>
             </div>
-            <h2 class="card-value" id="totalProductos">0</h2>
-            <p class="card-description">En todas las categorías</p>
           </div>
-          
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Stock bajo</h3>
-              <div class="card-icon orange">
-                <i class="fas fa-exclamation-triangle"></i>
+
+          <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-header">
+                  <h3 class="card-title">Stock bajo</h3>
+                  <div class="card-icon orange">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                </div>
+                <h2 class="card-value" id="stockBajo">0</h2>
+                <p class="card-description">Productos con menos de 10 unidades</p>
               </div>
             </div>
-            <h2 class="card-value" id="stockBajo">0</h2>
-            <p class="card-description">Productos con menos de 10 unidades</p>
           </div>
-          
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Categorías</h3>
-              <div class="card-icon green">
-                <i class="fas fa-tags"></i>
+
+          <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card">
+              <div class="card-body">
+                 <div class="card-header">
+                  <h3 class="card-title">Categorías</h3>
+                  <div class="card-icon green">
+                    <i class="fas fa-tags"></i>
+                  </div>
+                </div>
+                <h2 class="card-value" id="totalCategorias">5</h2>
+                <p class="card-description">Diferentes categorías</p>
               </div>
             </div>
-            <h2 class="card-value" id="totalCategorias">5</h2>
-            <p class="card-description">Diferentes categorías</p>
           </div>
-          
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Comentarios</h3>
-              <div class="card-icon red">
-                <i class="fas fa-comment-alt"></i>
+
+          <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-header">
+                  <h3 class="card-title">Comentarios</h3>
+                  <div class="card-icon red">
+                    <i class="fas fa-comment-alt"></i>
+                  </div>
+                </div>
+                <h2 class="card-value" id="totalComentarios">0</h2>
+                <p class="card-description">Comentarios agregados</p>
               </div>
             </div>
-            <h2 class="card-value" id="totalComentarios">0</h2>
-            <p class="card-description">Comentarios agregados</p>
           </div>
         </section>
 
-        <!-- Panel de filtros -->
+        <!-- Panel de filtros - Usando grid de Bootstrap -->
         <section class="filter-panel">
-          <h3>Filtrar productos</h3>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label for="categoria">Categoría</label>
-              <select id="categoria" onchange="filtrarProductos()">
-                <option value="">Todas las categorías</option>
-                <option value="lavamanos">Lavamanos</option>
-                <option value="muebles">Muebles</option>
-                <option value="sanitarios">Sanitarios</option>
-                <option value="grifos">Grifos</option>
-                <option value="accesorios">Accesorios</option>
-              </select>
+          <h3 class="mb-3">Filtrar productos</h3>
+          <div class="row g-3"> <!-- g-3 provides gap -->
+            <div class="col-md-4">
+              <div class="filter-group">
+                <label for="categoria" class="form-label">Categoría</label>
+                <select id="categoria" class="form-select" onchange="filtrarProductos()">
+                  <option value="">Todas las categorías</option>
+                  <option value="lavamanos">Lavamanos</option>
+                  <option value="muebles">Muebles</option>
+                  <option value="sanitarios">Sanitarios</option>
+                  <option value="grifos">Grifos</option>
+                  <option value="accesorios">Accesorios</option>
+                </select>
+              </div>
             </div>
-            
-            <div class="filter-group">
-              <label for="buscar">Buscar producto</label>
-              <input 
-                type="text" 
-                id="buscar" 
-                oninput="filtrarProductos()" 
-                placeholder="Buscar por nombre o código..."
-              >
+
+            <div class="col-md-4">
+              <div class="filter-group">
+                <label for="buscar" class="form-label">Buscar producto</label>
+                <input
+                  type="text"
+                  id="buscar"
+                  class="form-control"
+                  oninput="filtrarProductos()"
+                  placeholder="Buscar por nombre o código..."
+                >
+              </div>
             </div>
-            
-            <div class="filter-group">
-              <label for="stock">Estado de stock</label>
-              <select id="stock" onchange="filtrarProductos()">
-                <option value="">Todos</option>
-                <option value="bajo">Stock bajo (<10)</option>
-                <option value="medio">Stock medio (10-50)</option>
-                <option value="alto">Stock alto (>50)</option>
-              </select>
+
+            <div class="col-md-4">
+              <div class="filter-group">
+                <label for="stock" class="form-label">Estado de stock</label>
+                <select id="stock" class="form-select" onchange="filtrarProductos()">
+                  <option value="">Todos</option>
+                  <option value="bajo">Stock bajo (&lt;10)</option>
+                  <option value="medio">Stock medio (10-50)</option>
+                  <option value="alto">Stock alto (&gt;50)</option>
+                </select>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- Tabla de productos -->
+        <!-- Tabla de productos - Usando clases de Bootstrap -->
         <section class="table-container">
-          <table id="tablaProductos">
-            <thead>
-              <tr>
-                <th>Categoría</th>
-                <th>Código</th>
-                <th>Nombre</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Estado</th>
-                <th>Comentarios</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+            <div class="table-responsive"> <!-- Make table responsive -->
+                <table id="tablaProductos" class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Categoría</th>
+                      <th>Código</th>
+                      <th>Nombre</th>
+                      <th>Precio</th>
+                      <th>Cantidad</th>
+                      <th>Estado</th>
+                      <th>Comentarios</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+            </div>
         </section>
       </section>
 
@@ -694,17 +733,21 @@
         </header>
 
         <div class="chart-container">
-          <h3>Distribución por categorías</h3>
-          <div class="chart-row">
-            <div class="chart-wrapper">
-              <canvas id="categoriasChart"></canvas>
+          <h3 class="mb-4">Distribución por categorías y Stock</h3>
+          <div class="row chart-row">
+            <div class="col-md-6">
+              <div class="chart-wrapper">
+                <canvas id="categoriasChart"></canvas>
+              </div>
             </div>
-            <div class="chart-wrapper">
-              <canvas id="stockChart"></canvas>
+            <div class="col-md-6">
+              <div class="chart-wrapper">
+                <canvas id="stockChart"></canvas>
+              </div>
             </div>
           </div>
-          
-          <h3>Productos con stock bajo</h3>
+
+          <h3 class="mb-4">Productos con stock bajo</h3>
           <div class="chart-wrapper" style="height: 400px;">
             <canvas id="stockBajoChart"></canvas>
           </div>
@@ -720,15 +763,25 @@
           </div>
           <div class="user-info">
             <button class="btn btn-primary" onclick="marcarTodasComoLeidas()">
-              <i class="fas fa-check-circle"></i> Marcar todas como leídas
+              <i class="fas fa-check-circle me-2"></i> Marcar todas como leídas
             </button>
           </div>
         </header>
 
         <div class="table-container">
-          <h3>Alertas recientes</h3>
-          <div id="listaAlertas">
+          <h3 class="mb-3 px-3 pt-3">Alertas recientes</h3>
+          <div id="listaAlertas" class="list-group list-group-flush">
             <!-- Las alertas se generarán dinámicamente con JavaScript -->
+            <!-- Example:
+            <div class="alert-item list-group-item list-group-item-action d-flex align-items-center">
+                <div class="alert-icon warning me-3"><i class="fas fa-exclamation-circle"></i></div>
+                <div class="alert-content flex-grow-1">
+                    <div class="alert-title fw-bold">Stock bajo en Lavamanos de porcelana</div>
+                    <div class="alert-description text-muted">Solo quedan 8 unidades de Lavamanos de porcelana (LV-001).</div>
+                </div>
+                <div class="alert-time text-muted text-end ms-3">2 horas atrás</div>
+            </div>
+            -->
           </div>
         </div>
       </section>
@@ -743,67 +796,65 @@
         </header>
 
         <div class="settings-form">
-          <h3>Preferencias de usuario</h3>
-          
-          <div class="form-group">
-            <label for="nombreCompleto">Nombre completo</label>
-            <input type="text" id="nombreCompleto" placeholder="Ingresa tu nombre completo">
+          <h3 class="mb-4">Preferencias de usuario</h3>
+
+          <div class="mb-3">
+            <label for="nombreCompleto" class="form-label">Nombre completo</label>
+            <input type="text" id="nombreCompleto" class="form-control" placeholder="Ingresa tu nombre completo">
           </div>
-          
-          <div class="form-group">
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" placeholder="Ingresa tu correo electrónico">
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input type="email" id="email" class="form-control" placeholder="Ingresa tu correo electrónico">
           </div>
-          
-          <div class="form-group">
-            <label for="notificaciones">Recibir notificaciones</label>
-            <select id="notificaciones">
+
+          <div class="mb-3">
+            <label for="notificaciones" class="form-label">Recibir notificaciones</label>
+            <select id="notificaciones" class="form-select">
               <option value="si">Sí, recibir notificaciones</option>
               <option value="no">No recibir notificaciones</option>
             </select>
           </div>
-          
-          <div class="form-group">
-            <label for="tema">Tema de la interfaz</label>
-            <select id="tema">
+
+          <div class="mb-3">
+            <label for="tema" class="form-label">Tema de la interfaz</label>
+            <select id="tema" class="form-select">
               <option value="claro">Tema claro</option>
               <option value="oscuro">Tema oscuro</option>
               <option value="sistema">Usar configuración del sistema</option>
             </select>
           </div>
-          
-          <h3 style="margin-top: 30px;">Configuración de alertas</h3>
-          
-          <div class="form-group">
-            <label for="umbralStock">Umbral para stock bajo</label>
-            <input type="number" id="umbralStock" min="1" value="10">
-            <small>Número mínimo de unidades para considerar stock bajo</small>
+
+          <h3 class="mt-5 mb-4">Configuración de alertas</h3>
+
+          <div class="mb-3">
+            <label for="umbralStock" class="form-label">Umbral para stock bajo</label>
+            <input type="number" id="umbralStock" class="form-control" min="1" value="10">
+            <small class="form-text text-muted">Número mínimo de unidades para considerar stock bajo</small>
           </div>
-          
-          <div class="form-group">
-            <label>Tipos de alertas</label>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-              <label style="display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" id="alertasStock" checked>
-                <span>Alertas por stock bajo</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" id="alertasVencimiento" checked>
-                <span>Alertas por próximos vencimientos</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" id="alertasMovimiento">
-                <span>Alertas por movimientos importantes</span>
-              </label>
+
+          <div class="mb-3">
+            <label class="form-label">Tipos de alertas</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="alertasStock" checked>
+              <label class="form-check-label" for="alertasStock">Alertas por stock bajo</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="alertasVencimiento" checked>
+              <label class="form-check-label" for="alertasVencimiento">Alertas por próximos vencimientos</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="alertasMovimiento">
+              <label class="form-check-label" for="alertasMovimiento">Alertas por movimientos importantes</label>
             </div>
           </div>
-          
+
           <div class="form-actions">
-            <button class="btn" onclick="resetearConfiguracion()">
-              <i class="fas fa-undo"></i> Restablecer
+            <button class="btn btn-secondary" onclick="resetearConfiguracion()">
+              <i class="fas fa-undo me-2"></i> Restablecer
             </button>
             <button class="btn btn-primary" onclick="guardarConfiguracion()">
-              <i class="fas fa-save"></i> Guardar cambios
+              <i class="fas fa-save me-2"></i> Guardar cambios
             </button>
           </div>
         </div>
@@ -811,30 +862,34 @@
     </main>
   </div>
 
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
   <script>
     // Constantes y variables globales
     const categorias = ["lavamanos", "muebles", "sanitarios", "grifos", "accesorios"];
     let productosGlobales = []; // Almacena todos los productos para filtrado
     let alertasGlobales = []; // Almacena todas las alertas
     let configuracionUsuario = {}; // Almacena la configuración del usuario
+    let categoriasChart, stockChart, stockBajoChart; // Variables para las instancias de Chart.js
 
     // Función que se ejecuta al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
       // Verificar autenticación
       verificarAutenticacion();
-      
+
       // Cargar datos del usuario
       cargarDatosUsuario();
-      
+
       // Cargar productos
       cargarProductos();
-      
+
       // Cargar alertas
       cargarAlertas();
-      
+
       // Cargar configuración
       cargarConfiguracion();
-      
+
       // Mostrar sección de inventario por defecto
       mostrarSeccion('inventario');
     });
@@ -857,14 +912,21 @@
     function cargarDatosUsuario() {
       const usuario = sessionStorage.getItem('usuario');
       const rol = sessionStorage.getItem('rol');
-      
+
       document.getElementById('nombreUsuario').textContent = usuario;
       document.getElementById('rolUsuario').textContent = rol;
       document.getElementById('saludoEmpleado').textContent = `Bienvenido, ${usuario}`;
-      
+
       // Prellenar configuración con datos del usuario
-      document.getElementById('nombreCompleto').value = usuario;
-      document.getElementById('email').value = `${usuario.toLowerCase().replace(/\s+/g, '.')}@empresa.com`;
+      const nombreCompletoInput = document.getElementById('nombreCompleto');
+      const emailInput = document.getElementById('email');
+
+      if (nombreCompletoInput) {
+          nombreCompletoInput.value = usuario || '';
+      }
+       if (emailInput) {
+           emailInput.value = usuario ? `${usuario.toLowerCase().replace(/\s+/g, '.')}@empresa.com` : '';
+       }
     }
 
     /**
@@ -872,27 +934,54 @@
      */
     function cargarProductos() {
       productosGlobales = [];
-      
+
       for (let categoria of categorias) {
         const productos = JSON.parse(localStorage.getItem(categoria)) || [];
-        // Agregar datos de ejemplo si no hay productos
-        if (productos.length === 0 && categoria === "lavamanos") {
-          const productosEjemplo = [
-            { codigo: "LV-001", nombre: "Lavamanos de porcelana", precio: 125.99, cantidad: 8 },
-            { codigo: "LV-002", nombre: "Lavamanos moderno", precio: 89.50, cantidad: 15 },
-            { codigo: "LV-003", nombre: "Lavamanos clásico", precio: 145.75, cantidad: 3 }
-          ];
-          localStorage.setItem(categoria, JSON.stringify(productosEjemplo));
-          productosGlobales = productosGlobales.concat(
-            productosEjemplo.map(p => ({ ...p, categoria }))
-          );
+        // Agregar datos de ejemplo si no hay productos para alguna categoría
+        if (productos.length === 0) {
+             let productosEjemplo = [];
+             if (categoria === "lavamanos") {
+                productosEjemplo = [
+                  { codigo: "LV-001", nombre: "Lavamanos de porcelana", precio: 125.99, cantidad: 8 },
+                  { codigo: "LV-002", nombre: "Lavamanos moderno", precio: 89.50, cantidad: 15 },
+                  { codigo: "LV-003", nombre: "Lavamanos clásico", precio: 145.75, cantidad: 3 }
+                ];
+             } else if (categoria === "muebles") {
+                 productosEjemplo = [
+                     { codigo: "MU-001", nombre: "Mueble de baño bajo", precio: 250.00, cantidad: 22 },
+                     { codigo: "MU-002", nombre: "Espejo con luz LED", precio: 199.99, cantidad: 5 }
+                 ];
+             } else if (categoria === "sanitarios") {
+                 productosEjemplo = [
+                     { codigo: "SN-001", nombre: "Inodoro cerámico", precio: 300.00, cantidad: 12 },
+                     { codigo: "SN-002", nombre: "Bidé suspendido", precio: 180.00, cantidad: 7 }
+                 ];
+             } else if (categoria === "grifos") {
+                  productosEjemplo = [
+                      { codigo: "GF-001", nombre: "Grifo monomando lavabo", precio: 75.00, cantidad: 30 },
+                      { codigo: "GF-002", nombre: "Grifo ducha termostático", precio: 150.00, cantidad: 9 }
+                  ];
+             } else if (categoria === "accesorios") {
+                 productosEjemplo = [
+                      { codigo: "AC-001", nombre: "Set de accesorios 4pz", precio: 45.00, cantidad: 40 },
+                      { codigo: "AC-002", nombre: "Toallero", precio: 20.00, cantidad: 18 }
+                 ];
+             }
+
+             if(productosEjemplo.length > 0) {
+                 localStorage.setItem(categoria, JSON.stringify(productosEjemplo));
+                 productosGlobales = productosGlobales.concat(
+                   productosEjemplo.map(p => ({ ...p, categoria }))
+                 );
+             }
+
         } else {
           productosGlobales = productosGlobales.concat(
             productos.map(p => ({ ...p, categoria }))
           );
         }
       }
-      
+
       actualizarEstadisticas();
     }
 
@@ -901,173 +990,691 @@
      */
     function cargarAlertas() {
       alertasGlobales = JSON.parse(localStorage.getItem('alertas')) || [];
-      
+
       // Si no hay alertas, generamos algunas de ejemplo
       if (alertasGlobales.length === 0) {
-        const productosConStockBajo = productosGlobales.filter(p => p.cantidad < 10);
-        
-        productosConStockBajo.forEach(prod => {
-          alertasGlobales.push({
-            id: Date.now() + Math.random(),
-            tipo: 'stock',
-            titulo: `Stock bajo en ${prod.nombre}`,
-            descripcion: `Solo quedan ${prod.cantidad} unidades de ${prod.nombre} (${prod.codigo}).`,
-            categoria: prod.categoria,
-            codigoProducto: prod.codigo,
-            fecha: new Date().toISOString(),
-            leida: false,
-            urgente: prod.cantidad < 5
-          });
-        });
-        
-        // Agregar algunas alertas adicionales
-        alertasGlobales.push(
-          {
-            id: Date.now() + Math.random(),
-            tipo: 'vencimiento',
-            titulo: 'Productos próximos a vencer',
-            descripcion: '3 productos de la categoría sanitarios están próximos a vencer.',
-            categoria: 'sanitarios',
-            fecha: new Date(Date.now() - 86400000).toISOString(), // Ayer
-            leida: false,
-            urgente: true
-          },
-          {
-            id: Date.now() + Math.random(),
-            tipo: 'movimiento',
-            titulo: 'Movimiento inusual de inventario',
-            descripcion: 'Se registró una salida inusual de 25 unidades de grifos modelo GF-205.',
-            categoria: 'grifos',
-            codigoProducto: 'GF-205',
-            fecha: new Date(Date.now() - 172800000).toISOString(), // Hace 2 días
-            leida: true,
-            urgente: false
-          }
-        );
-        
-        localStorage.setItem('alertas', JSON.stringify(alertasGlobales));
-      }
-    }
+        // Generar alertas de stock bajo basadas en los productos cargados
+        const umbral = configuracionUsuario.umbralStock || 10;
+        const productosConStockBajo = productosGlobales.filter(p => p.cantidad < umbral);
 
-    /**
-     * Carga la configuración del usuario desde localStorage
-     */
-    function cargarConfiguracion() {
-      configuracionUsuario = JSON.parse(localStorage.getItem('configuracionUsuario')) || {
-        notificaciones: 'si',
-        tema: 'claro',
-        umbralStock: 10,
-        alertasStock: true,
-        alertasVencimiento: true,
-        alertasMovimiento: false
-      };
-      
-      // Aplicar configuración a los controles del formulario
-      document.getElementById('notificaciones').value = configuracionUsuario.notificaciones;
-      document.getElementById('tema').value = configuracionUsuario.tema;
-      document.getElementById('umbralStock').value = configuracionUsuario.umbralStock;
-      document.getElementById('alertasStock').checked = configuracionUsuario.alertasStock;
-      document.getElementById('alertasVencimiento').checked = configuracionUsuario.alertasVencimiento;
-      document.getElementById('alertasMovimiento').checked = configuracionUsuario.alertasMovimiento;
-      
-      // Aplicar tema seleccionado
-      aplicarTema(configuracionUsuario.tema);
-    }
+       productosConStockBajo.forEach(prod => {
+           // Evitar duplicados si ya existe una alerta similar (básico)
+           const existeAlertaStock = alertasGlobales.some(a =>
+               a.tipo === 'stock' && a.codigoProducto === prod.codigo && a.categoria === prod.categoria
+           );
 
-    /**
-     * Aplica el tema seleccionado a la interfaz
-     * @param {String} tema - Tema a aplicar ('claro', 'oscuro' o 'sistema')
-     */
-    function aplicarTema(tema) {
-      // En una implementación real, aquí cambiarías las variables CSS
-      console.log(`Aplicando tema: ${tema}`);
-    }
+           if (!existeAlertaStock) {
+                alertasGlobales.push({
+                   id: Date.now() + Math.random(), // Generar ID único
+                   tipo: 'stock',
+                   titulo: `Stock bajo en ${prod.nombre}`,
+                   descripcion: `Solo quedan ${prod.cantidad} unidades de ${prod.nombre} (${prod.codigo}).`,
+                   categoria: prod.categoria,
+                   codigoProducto: prod.codigo,
+                   fecha: new Date().toISOString(),
+                   leida: false,
+                   urgente: prod.cantidad < Math.max(1, Math.floor(umbral / 2)) // Urgente si está muy bajo
+                });
+           }
+       });
 
-    /**
-     * Muestra la sección seleccionada y oculta las demás
-     * @param {String} seccion - ID de la sección a mostrar ('inventario', 'reportes', 'alertas' o 'configuracion')
-     */
-    function mostrarSeccion(seccion) {
-      // Ocultar todas las secciones
-      document.getElementById('inventario-section').style.display = 'none';
-      document.getElementById('reportes-section').style.display = 'none';
-      document.getElementById('alertas-section').style.display = 'none';
-      document.getElementById('configuracion-section').style.display = 'none';
-      
-      // Mostrar la sección seleccionada
-      document.getElementById(`${seccion}-section`).style.display = 'block';
-      
-      // Actualizar el menú activo
-      document.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      
-      // Buscar el ítem del menú que coincide con la sección
-      const menuItems = document.querySelectorAll('.menu-item');
-      for (let item of menuItems) {
-        if (item.getAttribute('onclick').includes(seccion)) {
-          item.classList.add('active');
-          break;
+       // Agregar algunas alertas adicionales (ejemplos fijos si no existen)
+       const ejemploVencimientoId = 'ejemplo-vencimiento-1';
+       if (!alertasGlobales.some(a => a.id === ejemploVencimientoId)) {
+            alertasGlobales.push(
+              {
+                id: ejemploVencimientoId,
+                tipo: 'vencimiento',
+                titulo: 'Productos próximos a vencer',
+                descripcion: '3 productos de la categoría sanitarios están próximos a vencer.',
+                categoria: 'sanitarios',
+                fecha: new Date(Date.now() - 86400000).toISOString(), // Ayer
+                leida: false,
+                urgente: true
+              }
+            );
+       }
+
+       const ejemploMovimientoId = 'ejemplo-movimiento-1';
+        if (!alertasGlobales.some(a => a.id === ejemploMovimientoId)) {
+            alertasGlobales.push(
+              {
+                id: ejemploMovimientoId,
+                tipo: 'movimiento',
+                titulo: 'Movimiento inusual de inventario',
+                descripcion: 'Se registró una salida inusual de 25 unidades de grifos modelo GF-205.',
+                categoria: 'grifos',
+                codigoProducto: 'GF-205',
+                fecha: new Date(Date.now() - 172800000).toISOString(), // Hace 2 días
+                leida: true, // Ejemplo de alerta leída
+                urgente: false
+              }
+            );
         }
+
+       localStorage.setItem('alertas', JSON.stringify(alertasGlobales));
+     }
+     // Las alertas se mostrarán al activar la sección de alertas
+   }
+
+   /**
+    * Carga la configuración del usuario desde localStorage
+    */
+   function cargarConfiguracion() {
+     configuracionUsuario = JSON.parse(localStorage.getItem('configuracionUsuario')) || {
+       notificaciones: 'si',
+       tema: 'claro',
+       umbralStock: 10,
+       alertasStock: true,
+       alertasVencimiento: true,
+       alertasMovimiento: false
+     };
+
+     // Aplicar configuración a los controles del formulario si existen
+     const notificacionesSelect = document.getElementById('notificaciones');
+     const temaSelect = document.getElementById('tema');
+     const umbralStockInput = document.getElementById('umbralStock');
+     const alertasStockCheckbox = document.getElementById('alertasStock');
+     const alertasVencimientoCheckbox = document.getElementById('alertasVencimiento');
+     const alertasMovimientoCheckbox = document.getElementById('alertasMovimiento');
+
+
+     if (notificacionesSelect) notificacionesSelect.value = configuracionUsuario.notificaciones;
+     if (temaSelect) temaSelect.value = configuracionUsuario.tema;
+     if (umbralStockInput) umbralStockInput.value = configuracionUsuario.umbralStock;
+     if (alertasStockCheckbox) alertasStockCheckbox.checked = configuracionUsuario.alertasStock;
+     if (alertasVencimientoCheckbox) alertasVencimientoCheckbox.checked = configuracionUsuario.alertasVencimiento;
+     if (alertasMovimientoCheckbox) alertasMovimientoCheckbox.checked = configuracionUsuario.alertasMovimiento;
+
+     // Aplicar tema seleccionado
+     aplicarTema(configuracionUsuario.tema);
+   }
+
+   /**
+    * Aplica el tema seleccionado a la interfaz
+    * @param {String} tema - Tema a aplicar ('claro', 'oscuro' o 'sistema')
+    */
+   function aplicarTema(tema) {
+     const body = document.body;
+     // Remover clases de tema anteriores
+     body.classList.remove('theme-claro', 'theme-oscuro', 'theme-sistema');
+     // Añadir clase para el tema actual
+     body.classList.add(`theme-${tema}`);
+
+     // Implementación básica: puedes usar variables CSS o clases para modificar estilos
+     if (tema === 'oscuro') {
+         body.style.setProperty('--body-bg', '#343a40'); /* dark bg */
+         body.style.setProperty('--sidebar-bg', '#212529'); /* darker */
+         body.style.setProperty('--sidebar-color', '#f8f9fa'); /* light text */
+         body.style.setProperty('--card-bg', '#454d55'); /* dark card */
+         body.style.setProperty('--dark-color', '#f8f9fa'); /* dark-color becomes light text */
+         body.style.setProperty('--secondary-color', '#ced4da'); /* secondary becomes lighter */
+         body.style.setProperty('--table-header-bg', '#0d6efd'); /* primary */
+         body.style.setProperty('--table-header-color', '#ffffff'); /* white */
+         // Tendrías que ajustar muchos más colores para un tema oscuro completo
+     } else { // Claro o sistema
+         body.style.setProperty('--body-bg', '#f5f7fa');
+         body.style.setProperty('--sidebar-bg', '#212529');
+         body.style.setProperty('--sidebar-color', '#ffffff');
+         body.style.setProperty('--card-bg', '#ffffff');
+         body.style.setProperty('--dark-color', '#212529');
+          body.style.setProperty('--secondary-color', '#6c757d');
+          body.style.setProperty('--table-header-bg', '#0d6efd');
+          body.style.setProperty('--table-header-color', '#ffffff');
+          // Resetear a los valores por defecto
+     }
+     console.log(`Aplicando tema: ${tema}`);
+   }
+
+   /**
+    * Muestra la sección seleccionada y oculta las demás
+    * @param {String} seccion - ID de la sección a mostrar ('inventario', 'reportes', 'alertas' o 'configuracion')
+    * @param {Event} event - Evento del click
+    */
+   function mostrarSeccion(seccion, event) {
+     if (event) event.preventDefault(); // Prevenir comportamiento por defecto del link
+
+     // Ocultar todas las secciones
+     document.getElementById('inventario-section').style.display = 'none';
+     document.getElementById('reportes-section').style.display = 'none';
+     document.getElementById('alertas-section').style.display = 'none';
+     document.getElementById('configuracion-section').style.display = 'none';
+
+     // Mostrar la sección seleccionada
+     document.getElementById(`${seccion}-section`).style.display = 'block';
+
+     // Actualizar el menú activo
+     document.querySelectorAll('.sidebar-menu .menu-item').forEach(item => {
+       item.classList.remove('active');
+     });
+
+     // Buscar el ítem del menú que coincide con la sección y añadir clase 'active'
+     const activeMenuItem = document.querySelector(`.sidebar-menu .menu-item[onclick*="${seccion}"]`);
+      if (activeMenuItem) {
+          activeMenuItem.classList.add('active');
       }
-      
-      // Si es la sección de reportes, generar los gráficos
-      if (seccion === 'reportes') {
-        generarGraficos();
+
+     // Si es la sección de reportes, generar los gráficos
+     if (seccion === 'reportes') {
+       generarGraficos();
+     }
+
+     // Si es la sección de alertas, cargar la lista de alertas
+     if (seccion === 'alertas') {
+       mostrarAlertas();
+     }
+   }
+
+   /**
+    * Muestra los productos en la tabla, opcionalmente filtrados
+    * @param {Array} [productosFiltrados] - Productos filtrados a mostrar
+    */
+   function mostrarProductos(productosFiltrados = null) {
+     const tbody = document.querySelector("#tablaProductos tbody");
+     tbody.innerHTML = "";
+
+     const productosAMostrar = productosFiltrados || productosGlobales;
+
+     if (productosAMostrar.length === 0) {
+       tbody.innerHTML = `
+         <tr>
+           <td colspan="8" class="text-center py-5">
+             No se encontraron productos. Prueba con otros filtros.
+           </td>
+         </tr>
+       `;
+       return;
+     }
+
+     productosAMostrar.forEach((prod) => {
+       const tr = document.createElement("tr");
+
+       // Determinar estado del stock
+       let estado = "";
+       let badgeClass = "";
+       const umbral = configuracionUsuario.umbralStock || 10;
+       if (prod.cantidad < umbral) {
+         estado = "Bajo";
+         badgeClass = "badge-danger";
+       } else if (prod.cantidad < 50) { // Umbral fijo para medio
+         estado = "Medio";
+         badgeClass = "badge-warning";
+       } else {
+         estado = "Alto";
+         badgeClass = "badge-success";
+       }
+
+       // Obtener comentario guardado
+       const comentarioKey = `comentario_${prod.categoria}_${prod.codigo}`;
+       const comentarioGuardado = localStorage.getItem(comentarioKey) || "";
+
+       tr.innerHTML = `
+         <td><span class="badge ${badgeClass.replace('-danger', '-primary').replace('-warning', '-primary').replace('-success', '-primary')}">${prod.categoria}</span></td>
+         <td>${prod.codigo}</td>
+         <td>${prod.nombre}</td>
+         <td>$${parseFloat(prod.precio).toFixed(2)}</td>
+         <td>${prod.cantidad}</td>
+         <td><span class="badge ${badgeClass}">${estado}</span></td>
+         <td>
+           <input
+             type="text"
+             class="form-control form-control-sm comentario-input"
+             placeholder="Agregar comentario..."
+             value="${comentarioGuardado}"
+             onchange="guardarComentario(this, '${prod.categoria}', '${prod.codigo}')"
+           >
+         </td>
+         <td class="actions">
+           <button class="btn btn-sm btn-primary" onclick="editarProducto('${prod.categoria}', '${prod.codigo}')">
+             <i class="fas fa-edit"></i>
+           </button>
+         </td>
+       `;
+       tbody.appendChild(tr);
+     });
+   }
+
+   /**
+    * Guarda el comentario de un producto en localStorage
+    * @param {HTMLInputElement} inputElement - Elemento input del comentario
+    * @param {String} categoria - Categoría del producto
+    * @param {String} codigo - Código del producto
+    */
+   function guardarComentario(inputElement, categoria, codigo) {
+     const comentario = inputElement.value.trim();
+     const comentarioKey = `comentario_${categoria}_${codigo}`;
+
+     if (comentario) {
+       localStorage.setItem(comentarioKey, comentario);
+       console.log(`Comentario guardado para ${codigo} en ${categoria}: "${comentario}"`);
+     } else {
+       localStorage.removeItem(comentarioKey);
+       console.log(`Comentario eliminado para ${codigo} en ${categoria}`);
+     }
+
+     // Actualizar estadísticas de comentarios (opcional)
+     actualizarEstadisticas();
+   }
+
+   /**
+    * Función placeholder para editar un producto
+    * @param {String} categoria - Categoría del producto
+    * @param {String} codigo - Código del producto
+    */
+   function editarProducto(categoria, codigo) {
+     alert(`Funcionalidad para editar el producto ${codigo} de la categoría ${categoria} aún no implementada.`);
+     console.log(`Intentando editar producto: Categoría=${categoria}, Código=${codigo}`);
+     // Aquí podrías abrir un modal o formulario para editar los datos del producto
+   }
+
+   /**
+    * Filtra los productos según los criterios seleccionados y los muestra
+    */
+   function filtrarProductos() {
+     const categoriaSeleccionada = document.getElementById("categoria").value;
+     const textoBusqueda = document.getElementById("buscar").value.toLowerCase();
+     const estadoStock = document.getElementById("stock").value;
+     const umbral = configuracionUsuario.umbralStock || 10;
+
+     const productosFiltrados = productosGlobales.filter(prod => {
+       const coincideCategoria = !categoriaSeleccionada || prod.categoria === categoriaSeleccionada;
+       const coincideBusqueda = prod.nombre.toLowerCase().includes(textoBusqueda) || prod.codigo.toLowerCase().includes(textoBusqueda);
+
+       let coincideStock = true;
+       if (estadoStock === 'bajo') {
+         coincideStock = prod.cantidad < umbral;
+       } else if (estadoStock === 'medio') {
+         coincideStock = prod.cantidad >= umbral && prod.cantidad < 50;
+       } else if (estadoStock === 'alto') {
+         coincideStock = prod.cantidad >= 50;
+       }
+
+       return coincideCategoria && coincideBusqueda && coincideStock;
+     });
+
+     mostrarProductos(productosFiltrados);
+   }
+
+   /**
+    * Actualiza las estadísticas mostradas en las tarjetas de resumen
+    */
+   function actualizarEstadisticas() {
+     const totalProductos = productosGlobales.reduce((sum, prod) => sum + prod.cantidad, 0);
+     const stockBajo = productosGlobales.filter(prod => prod.cantidad < (configuracionUsuario.umbralStock || 10)).length;
+     const totalCategoriasUnicas = new Set(productosGlobales.map(p => p.categoria)).size;
+
+     // Contar comentarios guardados
+     let comentariosCount = 0;
+     for (let i = 0; i < localStorage.length; i++) {
+         const key = localStorage.key(i);
+         if (key.startsWith('comentario_')) {
+             if (localStorage.getItem(key).trim() !== '') { // Solo contar si el comentario no está vacío
+                  comentariosCount++;
+             }
+         }
+     }
+
+
+     document.getElementById('totalProductos').textContent = totalProductos;
+     document.getElementById('stockBajo').textContent = stockBajo;
+     document.getElementById('totalCategorias').textContent = totalCategoriasUnicas || categorias.length; // Mostrar al menos las categorías base
+     document.getElementById('totalComentarios').textContent = comentariosCount;
+
+     // Actualizar umbral en configuración si ha cambiado
+     const umbralInput = document.getElementById('umbralStock');
+     if (umbralInput) {
+         umbralInput.value = configuracionUsuario.umbralStock || 10;
+     }
+
+     // No llamar a mostrarProductos() aquí si ya se llama al final de cargarProductos()
+     // mostrarProductos(); // Mostrar todos los productos por defecto al actualizar estadísticas
+   }
+
+   /**
+    * Genera y muestra los gráficos de reportes
+    */
+   function generarGraficos() {
+     // Destruir gráficos existentes para evitar duplicados
+     if (window.categoriasChart) window.categoriasChart.destroy();
+     if (window.stockChart) window.stockChart.destroy();
+     if (window.stockBajoChart) window.stockBajoChart.destroy();
+
+     // Datos para el gráfico de distribución por categorías
+     const productosPorCategoria = categorias.map(cat =>
+       productosGlobales.filter(p => p.categoria === cat).reduce((sum, p) => sum + p.cantidad, 0)
+     );
+
+     const ctxCategorias = document.getElementById('categoriasChart').getContext('2d');
+     window.categoriasChart = new Chart(ctxCategorias, {
+       type: 'pie',
+       data: {
+         labels: categorias.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1)),
+         datasets: [{
+           label: 'Cantidad por categoría',
+           data: productosPorCategoria,
+           backgroundColor: [
+             'rgba(13, 110, 253, 0.8)', // primary-color de Bootstrap
+             'rgba(25, 135, 84, 0.8)', // success-color de Bootstrap
+             'rgba(220, 53, 69, 0.8)',  // danger-color de Bootstrap
+             'rgba(255, 193, 7, 0.8)',  // warning-color de Bootstrap
+             'rgba(108, 117, 125, 0.8)'  // secondary-color de Bootstrap (gris)
+           ],
+           borderColor: [
+             'rgba(13, 110, 253, 1)',
+             'rgba(25, 135, 84, 1)',
+             'rgba(220, 53, 69, 1)',
+             'rgba(255, 193, 7, 1)',
+             'rgba(108, 117, 125, 1)'
+           ],
+           borderWidth: 1
+         }]
+       },
+       options: {
+         responsive: true,
+         maintainAspectRatio: false,
+         plugins: {
+           legend: {
+             position: 'right',
+           },
+           title: {
+             display: true,
+             text: 'Distribución de productos por categoría'
+           }
+         }
+       }
+     });
+
+     // Datos para el gráfico de estado de stock
+     const umbralStock = configuracionUsuario.umbralStock || 10;
+     const stockCounts = {
+       bajo: productosGlobales.filter(p => p.cantidad < umbralStock).length,
+       medio: productosGlobales.filter(p => p.cantidad >= umbralStock && p.cantidad < 50).length, // Umbral fijo para medio, podrías hacerlo configurable
+       alto: productosGlobales.filter(p => p.cantidad >= 50).length
+     };
+
+     const ctxStock = document.getElementById('stockChart').getContext('2d');
+     window.stockChart = new Chart(ctxStock, {
+       type: 'doughnut',
+       data: {
+         labels: ['Stock Bajo', 'Stock Medio', 'Stock Alto'],
+         datasets: [{
+           label: 'Cantidad de productos',
+           data: [stockCounts.bajo, stockCounts.medio, stockCounts.alto],
+           backgroundColor: [
+             'rgba(220, 53, 69, 0.8)',  // danger-color de Bootstrap
+             'rgba(255, 193, 7, 0.8)',  // warning-color de Bootstrap
+             'rgba(25, 135, 84, 0.8)' // success-color de Bootstrap
+           ],
+           borderColor: [
+             'rgba(220, 53, 69, 1)',
+             'rgba(255, 193, 7, 1)',
+             'rgba(25, 135, 84, 1)'
+           ],
+           borderWidth: 1
+         }]
+       },
+       options: {
+         responsive: true,
+         maintainAspectRatio: false,
+         plugins: {
+           legend: {
+             position: 'right',
+           },
+           title: {
+             display: true,
+             text: 'Distribución de productos por estado de stock'
+           }
+         }
+       }
+     });
+
+     // Datos para el gráfico de productos con stock bajo (barra)
+     const productosStockBajo = productosGlobales
+         .filter(p => p.cantidad < (configuracionUsuario.umbralStock || 10))
+         .sort((a, b) => a.cantidad - b.cantidad); // Ordenar por cantidad
+
+     const labelsStockBajo = productosStockBajo.map(p => `${p.nombre} (${p.codigo})`);
+     const dataStockBajo = productosStockBajo.map(p => p.cantidad);
+
+     const ctxStockBajo = document.getElementById('stockBajoChart').getContext('2d');
+     window.stockBajoChart = new Chart(ctxStockBajo, {
+       type: 'bar',
+       data: {
+         labels: labelsStockBajo,
+         datasets: [{
+           label: 'Cantidad en Stock',
+           data: dataStockBajo,
+           backgroundColor: 'rgba(220, 53, 69, 0.8)', // danger-color de Bootstrap
+           borderColor: 'rgba(220, 53, 69, 1)',
+           borderWidth: 1
+         }]
+       },
+       options: {
+         responsive: true,
+         maintainAspectRatio: false,
+         plugins: {
+           legend: {
+             display: false
+           },
+           title: {
+             display: true,
+             text: `Productos con stock por debajo de ${configuracionUsuario.umbralStock || 10}`
+           }
+         },
+         scales: {
+           y: {
+             beginAtZero: true,
+             title: {
+               display: true,
+               text: 'Cantidad'
+             }
+           },
+           x: {
+               title: {
+                   display: true,
+                   text: 'Producto'
+               }
+           }
+         }
+       }
+     });
+   }
+
+   /**
+    * Muestra la lista de alertas
+    */
+   function mostrarAlertas() {
+     const listaAlertasDiv = document.getElementById('listaAlertas');
+     listaAlertasDiv.innerHTML = ''; // Limpiar lista actual
+
+     // Filtrar alertas según la configuración del usuario
+     const alertasFiltradas = alertasGlobales.filter(alerta => {
+         if (alerta.tipo === 'stock' && !configuracionUsuario.alertasStock) return false;
+         if (alerta.tipo === 'vencimiento' && !configuracionUsuario.alertasVencimiento) return false;
+         if (alerta.tipo === 'movimiento' && !configuracionUsuario.alertasMovimiento) return false;
+         return true;
+     });
+
+
+     if (alertasFiltradas.length === 0) {
+       listaAlertasDiv.innerHTML = `
+         <div class="text-center py-5 text-muted">
+           No tienes alertas ${alertasGlobales.length > 0 ? 'visibles con tu configuración' : 'pendientes'}.
+         </div>
+       `;
+       return;
+     }
+
+     alertasFiltradas.forEach(alerta => {
+       const alertItem = document.createElement('div');
+       alertItem.classList.add('alert-item', 'list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
+       if (alerta.leida) {
+         alertItem.classList.add('text-muted'); // Clase de Bootstrap para texto atenuado
+         alertItem.style.fontStyle = 'italic';
+       }
+
+       let iconClass = 'fas fa-info-circle';
+       let iconColorClass = 'info'; // Default Bootstrap info color
+       if (alerta.tipo === 'stock') {
+         iconClass = 'fas fa-boxes';
+         iconColorClass = alerta.urgente ? 'danger' : 'warning';
+       } else if (alerta.tipo === 'vencimiento') {
+         iconClass = 'fas fa-calendar-times'; // Icono de calendario/tiempo
+         iconColorClass = alerta.urgente ? 'danger' : 'warning';
+       } else if (alerta.tipo === 'movimiento') {
+          iconClass = 'fas fa-exchange-alt';
+          iconColorClass = 'primary'; // Usando color primario para movimientos
+       }
+
+       alertItem.innerHTML = `
+         <div class="alert-icon ${iconColorClass} me-3">
+           <i class="${iconClass}"></i>
+         </div>
+         <div class="alert-content flex-grow-1">
+           <div class="alert-title fw-bold">${alerta.titulo}</div>
+           <div class="alert-description text-muted">${alerta.descripcion}</div>
+         </div>
+         <div class="alert-time text-muted text-end ms-3">${timeAgo(new Date(alerta.fecha))}</div>
+       `;
+
+       // Añadir evento click para marcar como leída
+       alertItem.addEventListener('click', () => marcarAlertaComoLeida(alerta.id));
+
+       listaAlertasDiv.appendChild(alertItem);
+     });
+   }
+
+   /**
+    * Marca una alerta como leída
+    * @param {Number} alertaId - ID de la alerta a marcar
+    */
+   function marcarAlertaComoLeida(alertaId) {
+     const alertaIndex = alertasGlobales.findIndex(a => a.id === alertaId);
+     if (alertaIndex !== -1 && !alertasGlobales[alertaIndex].leida) {
+       alertasGlobales[alertaIndex].leida = true;
+       localStorage.setItem('alertas', JSON.stringify(alertasGlobales));
+       mostrarAlertas(); // Actualizar la lista mostrada
+       console.log(`Alerta ${alertaId} marcada como leída.`);
+     } else if (alertaIndex !== -1 && alertasGlobales[alertaIndex].leida) {
+        console.log(`Alerta ${alertaId} ya estaba marcada como leída.`);
+     } else {
+         console.warn(`Alerta con ID ${alertaId} no encontrada.`);
+     }
+   }
+
+   /**
+    * Marca todas las alertas como leídas
+    */
+   function marcarTodasComoLeidas() {
+     let changed = false;
+     alertasGlobales.forEach(alerta => {
+         if (!alerta.leida) {
+             alerta.leida = true;
+             changed = true;
+         }
+     });
+
+     if (changed) {
+         localStorage.setItem('alertas', JSON.stringify(alertasGlobales));
+         mostrarAlertas(); // Actualizar la lista mostrada
+         alert('Todas las alertas han sido marcadas como leídas.');
+         console.log('Todas las alertas marcadas como leídas.');
+     } else {
+         alert('No hay alertas pendientes para marcar como leídas.');
+         console.log('No hay alertas pendientes.');
+     }
+   }
+
+   /**
+    * Guarda la configuración actual del usuario en localStorage
+    */
+   function guardarConfiguracion() {
+     const umbralStockValue = parseInt(document.getElementById('umbralStock').value);
+     const umbralStock = isNaN(umbralStockValue) || umbralStockValue < 1 ? 10 : umbralStockValue; // Validar y usar valor por defecto
+
+     configuracionUsuario = {
+       notificaciones: document.getElementById('notificaciones').value,
+       tema: document.getElementById('tema').value,
+       umbralStock: umbralStock,
+       alertasStock: document.getElementById('alertasStock').checked,
+       alertasVencimiento: document.getElementById('alertasVencimiento').checked,
+       alertasMovimiento: document.getElementById('alertasMovimiento').checked
+     };
+     localStorage.setItem('configuracionUsuario', JSON.stringify(configuracionUsuario));
+     aplicarTema(configuracionUsuario.tema);
+     actualizarEstadisticas(); // Actualizar estadísticas si el umbral de stock bajo cambió
+     alert('Configuración guardada.');
+     console.log('Configuración guardada:', configuracionUsuario);
+
+     // Recargar alertas para que se apliquen los filtros y el umbral
+     cargarAlertas();
+     // Si estás en la sección de alertas, mostrarlas actualizadas
+     if (document.getElementById('alertas-section').style.display === 'block') {
+         mostrarAlertas();
+     }
+     // Si estás en la sección de reportes, actualizar gráficos si el umbral cambió
+      if (document.getElementById('reportes-section').style.display === 'block') {
+          generarGraficos();
       }
-      
-      // Si es la sección de alertas, cargar la lista de alertas
-      if (seccion === 'alertas') {
-        mostrarAlertas();
-      }
-    }
+   }
 
-    /**
-     * Muestra los productos en la tabla, opcionalmente filtrados
-     * @param {Array} [productosFiltrados] - Productos filtrados a mostrar
-     */
-    function mostrarProductos(productosFiltrados = null) {
-      const tbody = document.querySelector("#tablaProductos tbody");
-      tbody.innerHTML = "";
+   /**
+    * Restablece la configuración del usuario a los valores por defecto
+    */
+   function resetearConfiguracion() {
+     localStorage.removeItem('configuracionUsuario');
+     cargarConfiguracion(); // Vuelve a cargar los valores por defecto
+     actualizarEstadisticas(); // Asegurar que las estadísticas se actualicen con el umbral por defecto
+     cargarAlertas(); // Recargar alertas con el umbral por defecto
+     // Si estás en la sección de alertas o reportes, actualizarlas
+     if (document.getElementById('alertas-section').style.display === 'block') {
+         mostrarAlertas();
+     }
+     if (document.getElementById('reportes-section').style.display === 'block') {
+         generarGraficos();
+     }
 
-      const productosAMostrar = productosFiltrados || productosGlobales;
+     alert('Configuración restablecida a valores por defecto.');
+     console.log('Configuración restablecida.');
+   }
 
-      if (productosAMostrar.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" style="text-align: center; padding: 30px;">
-              No se encontraron productos. Prueba con otros filtros.
-            </td>
-          </tr>
-        `;
-        return;
-      }
+   /**
+    * Cierra la sesión del usuario
+    * @param {Event} event - Evento del click
+    */
+   function cerrarSesion(event) {
+       if (event) event.preventDefault(); // Prevenir comportamiento por defecto del link
 
-      productosAMostrar.forEach((prod) => {
-        const tr = document.createElement("tr");
-        
-        // Determinar estado del stock
-        let estado = "";
-        let badgeClass = "";
-        if (prod.cantidad < 10) {
-          estado = "Bajo";
-          badgeClass = "badge-danger";
-        } else if (prod.cantidad < 50) {
-          estado = "Medio";
-          badgeClass = "badge-warning";
-        } else {
-          estado = "Alto";
-          badgeClass = "badge-success";
-        }
-        
-        // Obtener comentario guardado
-        const comentarioKey = `comentario_${prod.categoria}_${prod.codigo}`;
-        const comentarioGuardado = localStorage.getItem(comentarioKey) || "";
+       sessionStorage.removeItem('usuario');
+       sessionStorage.removeItem('rol');
+       window.location.href = "../../../Pages/index.html"; // Redirigir a la página de inicio de sesión
+   }
 
-        tr.innerHTML = `
-          <td><span class="badge badge-primary">${prod.categoria}</span></td>
-          <td>${prod.codigo}</td>
-          <td>${prod.nombre}</td>
-          <td>$${parseFloat(prod.precio).toFixed(2)}</td>
-          <td>${prod.cantidad}</td>
-         
+   /**
+    * Helper function to format time ago
+    * @param {Date} date - Date object to format
+    * @returns {String} - Formatted time ago string
+    */
+   function timeAgo(date) {
+       const now = new Date();
+       const seconds = Math.round((now - date) / 1000);
+       const minutes = Math.round(seconds / 60);
+       const hours = Math.round(minutes / 60);
+       const days = Math.round(hours / 24);
+       const months = Math.round(days / 30.4);
+       const years = Math.round(days / 365);
+
+       if (seconds < 0) return 'en el futuro'; // Handle future dates
+       if (seconds < 10) return 'hace un instante';
+       if (seconds < 60) return seconds + ' segundos atrás';
+       if (minutes < 60) return minutes + ' minutos atrás';
+       if (hours < 24) return hours + ' horas atrás';
+       if (days < 30) return days + ' días atrás';
+       if (months < 12) return months + ' meses atrás';
+       return years + ' años atrás';
+   }
+
+  </script>
+</body>
+</html>
+
